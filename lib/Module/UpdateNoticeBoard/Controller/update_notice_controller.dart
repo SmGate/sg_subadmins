@@ -32,7 +32,6 @@ class UpdateNoticeBoardController extends GetxController {
 
   @override
   void onInit() {
-    
     super.onInit();
     notice = arguments[0];
     userdata = arguments[1];
@@ -83,6 +82,7 @@ class UpdateNoticeBoardController extends GetxController {
       Uri.parse(Api.updateNotice),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
       body: jsonEncode(<String, dynamic>{
@@ -95,7 +95,6 @@ class UpdateNoticeBoardController extends GetxController {
       }),
     );
 
-    
     if (response.statusCode == 200) {
       isLoading = false;
       update();

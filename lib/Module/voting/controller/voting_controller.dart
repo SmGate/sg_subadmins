@@ -5,6 +5,7 @@ import 'package:societyadminapp/Model/User.dart';
 import 'package:societyadminapp/Module/voting/model/ganerate_poll_model.dart';
 import 'package:societyadminapp/Module/voting/model/get_all_poll_model.dart';
 import 'package:societyadminapp/Module/voting/service/poll_service.dart';
+import 'package:societyadminapp/Routes/set_routes.dart';
 
 class VotingController extends GetxController {
   var user = Get.arguments;
@@ -73,6 +74,7 @@ class VotingController extends GetxController {
       String? endDate,
       String? endTime,
       int? isResonable,
+      String? subadminId,
       List<String>? options}) async {
     loading.value = true;
     errorGeneratingPoll.value = "";
@@ -84,7 +86,8 @@ class VotingController extends GetxController {
         endDate: endDate,
         endTime: endTime,
         isResonable: isResonable,
-        options: options);
+        options: options,
+        subadminId: subadminId);
 
     loading.value = false;
 
@@ -96,6 +99,7 @@ class VotingController extends GetxController {
       endnoticetimeController.text = "";
       optionController.text = "";
       options?.clear();
+      Get.offNamed(voting, arguments: user);
     } else {
       loading.value = false;
       errorGeneratingPoll.value = res;
@@ -112,8 +116,11 @@ class VotingController extends GetxController {
   Future<GetAllPollModel> getAllPoll({
     String? societyId,
   }) async {
+    var userId =
+        userdata?.structureType == 6 ? userdata?.userid : societyId ?? 0;
     errorGettingPoll.value = "";
-    var res = await GeneratePollService.getAllPoll(societyId: societyId);
+    var res =
+        await GeneratePollService.getAllPoll(societyId: userId.toString());
 
     if (res is GetAllPollModel) {
       getAllPollModel = res;

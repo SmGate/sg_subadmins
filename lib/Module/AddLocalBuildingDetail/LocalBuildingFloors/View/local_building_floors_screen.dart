@@ -45,8 +45,8 @@ class LocalBuildingFloorsScreen extends GetView {
                       Expanded(
                           child: FutureBuilder(
                               future: controller.FloorsApi(
-                                  buildingid: controller.user.societyid!,
-                                  token: controller.user.bearerToken!),
+                                buildingid: controller.user.societyid ?? 0,
+                              ),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {
                                 if (snapshot.hasData) {
@@ -63,8 +63,20 @@ class LocalBuildingFloorsScreen extends GetView {
                                                 snapshot.data.data[index].id,
                                               ]);
                                         },
-                                        text: snapshot.data.data[index].name
-                                            .toString(),
+                                        text: controller.allFloorsModel
+                                                .data?[index].name ??
+                                            "",
+                                        text2: controller
+                                                .allFloorsModel
+                                                .data?[index]
+                                                .building
+                                                ?.societybuildingname ??
+                                            "",
+                                        text3: controller.allFloorsModel
+                                                .data?[index].category ??
+                                            "",
+                                        label2: "Building",
+                                        label3: "Floor Type",
                                       );
                                     },
                                   );

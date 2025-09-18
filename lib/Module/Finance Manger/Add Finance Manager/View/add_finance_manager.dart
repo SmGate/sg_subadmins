@@ -93,8 +93,8 @@ class AddFinanceManager extends GetView {
                           MyTextFormField(
                             controller: controller.addressController,
                             validator: emptyStringValidator,
-                            hintText: 'Address',
-                            labelText: 'Enter Address ',
+                            hintText: 'Email',
+                            labelText: 'Enter Email ',
                           ),
                           MyTextFormField(
                             textInputType: TextInputType.number,

@@ -6,7 +6,6 @@ import '../../../../utils/Constants/api_routes.dart';
 import '../../../../Services/Shared Preferences/MySharedPreferences.dart';
 import '../../../../Model/User.dart';
 
-
 import '../Model/BlockBuilding.dart';
 
 class BlockBuildingController extends GetxController {
@@ -44,7 +43,6 @@ class BlockBuildingController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -79,6 +77,7 @@ class BlockBuildingController extends GetxController {
           type.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

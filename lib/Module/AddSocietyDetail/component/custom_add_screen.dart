@@ -106,7 +106,7 @@ class CustomAddScreen extends StatelessWidget {
                             Container(
                               width: 75.w,
                               height: 75.h,
-                              color: Color.fromRGBO(255, 153, 0, 0.14),
+                              color: AppColors.greyTransparent.withOpacity(0.1),
                               child: Center(
                                 child: TextFormField(
                                   validator: emptyStringValidator,
@@ -114,6 +114,7 @@ class CustomAddScreen extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                   enabled: true,
                                   decoration: InputDecoration(
+                                      fillColor: AppColors.greyTransparent,
                                       contentPadding:
                                           EdgeInsets.only(left: 16.w),
                                       errorBorder: OutlineInputBorder(
@@ -128,7 +129,7 @@ class CustomAddScreen extends StatelessWidget {
                             Container(
                               width: 75.w,
                               height: 75.h,
-                              color: Color.fromRGBO(255, 153, 0, 0.14),
+                              color: AppColors.greyTransparent.withOpacity(0.1),
                               // decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/textfieldimg.png'))),
 
                               child: Center(
@@ -138,6 +139,7 @@ class CustomAddScreen extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                   enabled: true,
                                   decoration: InputDecoration(
+                                      fillColor: AppColors.greyTransparent,
                                       contentPadding:
                                           EdgeInsets.only(left: 16.w),
                                       errorBorder: OutlineInputBorder(

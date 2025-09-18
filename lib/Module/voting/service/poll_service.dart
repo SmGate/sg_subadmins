@@ -5,13 +5,15 @@ import 'package:societyadminapp/utils/Constants/base_client.dart';
 import 'package:http/http.dart' as http;
 
 class GeneratePollService {
-  static Future<dynamic> generatePoll(
-      {String? societyId,
-      String? title,
-      String? endDate,
-      String? endTime,
-      int? isResonable,
-      List<String>? options}) async {
+  static Future<dynamic> generatePoll({
+    String? societyId,
+    String? title,
+    String? endDate,
+    String? endTime,
+    int? isResonable,
+    List<String>? options,
+    String? subadminId,
+  }) async {
     try {
       var url = "${Api.generatePoll}";
 
@@ -22,6 +24,7 @@ class GeneratePollService {
         "end_time": endTime,
         "is_resonable": isResonable,
         "options": options,
+        "subadminid": subadminId
       };
       var res = await BaseClientClass.post(url, data);
 

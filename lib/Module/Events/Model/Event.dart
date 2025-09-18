@@ -34,18 +34,26 @@ class Data {
   String? createdAt;
   String? updatedAt;
 
-  Data(
-      {this.id,
-        this.userid,
-        this.roleid,
-        this.rolename,
-        this.title,
-        this.description,
-        this.startdate,
-        this.enddate,
-        this.active,
-        this.createdAt,
-        this.updatedAt});
+  String? startTime;
+  String? endTime;
+  List<ImageData>? images;
+
+  Data({
+    this.id,
+    this.userid,
+    this.roleid,
+    this.rolename,
+    this.title,
+    this.description,
+    this.startdate,
+    this.enddate,
+    this.active,
+    this.createdAt,
+    this.updatedAt,
+    this.startTime,
+    this.endTime,
+    this.images,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -59,6 +67,16 @@ class Data {
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+
+    startTime = json['starttime'];
+    endTime = json['endtime'];
+
+    if (json['images'] != null) {
+      images = <ImageData>[];
+      json['images'].forEach((v) {
+        images!.add(ImageData.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -72,6 +90,41 @@ class Data {
     data['startdate'] = this.startdate;
     data['enddate'] = this.enddate;
     data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+
+    data['starttime'] = this.startTime;
+    data['endtime'] = this.endTime;
+    if (this.images != null) {
+      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ImageData {
+  int? id;
+  int? eventid;
+  String? image;
+  String? createdAt;
+  String? updatedAt;
+
+  ImageData(
+      {this.id, this.eventid, this.image, this.createdAt, this.updatedAt});
+
+  ImageData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    eventid = json['eventid'];
+    image = json['image'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = this.id;
+    data['eventid'] = this.eventid;
+    data['image'] = this.image;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

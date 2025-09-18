@@ -32,6 +32,8 @@ class SocietyBuildingScreen extends GetView {
               } else if (controller.user.structureType == 5) {
                 Get.offAndToNamed(structureType5HouseOrBuildingMiddlewareScreen,
                     arguments: controller.user);
+              } else if (controller.user.structureType == 6) {
+                Get.offAndToNamed(homescreen, arguments: controller.user);
               }
 
               return false;
@@ -61,6 +63,9 @@ class SocietyBuildingScreen extends GetView {
                             Get.offAndToNamed(
                                 structureType5HouseOrBuildingMiddlewareScreen,
                                 arguments: controller.user);
+                          } else if (controller.user.structureType == 6) {
+                            Get.offAndToNamed(homescreen,
+                                arguments: controller.user);
                           }
                         },
                         text: 'Buildings',
@@ -68,8 +73,10 @@ class SocietyBuildingScreen extends GetView {
                       32.ph,
                       Expanded(
                           child: FutureBuilder(
-                              future: controller.SocietyBuildingApi(
-                                  dynamicid: controller.user.societyid!,
+                              future: controller.societyBuildingApi(
+                                  dynamicid: controller.user.structureType == 6
+                                      ? controller.user.userid ?? 0
+                                      : controller.user.societyid ?? 0,
                                   token: controller.user.bearerToken!),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {

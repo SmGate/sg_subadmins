@@ -40,7 +40,7 @@ class FirstCustomContainer extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(8.r),
                   image: DecorationImage(
-                      fit: BoxFit.contain, image: NetworkImage(ImageBaseUrl!))),
+                      fit: BoxFit.cover, image: NetworkImage(ImageBaseUrl!))),
             ),
           ),
           imageUrl: ImageBaseUrl.toString(),

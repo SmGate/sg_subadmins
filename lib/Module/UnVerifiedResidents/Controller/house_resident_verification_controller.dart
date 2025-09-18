@@ -267,11 +267,11 @@ class HouseResidentVerificationController extends GetxController {
             id: e['id'],
             subadminid: e['subadminid'],
             charges: e['charges'],
-            area: e['area'],
+            area: e['area'] == null ? e['category'] : e['area'],
             bedrooms: e['bedrooms'],
             status: e['status'],
             type: e['type'],
-            unit: e['unit']))
+            unit: e['unit'] == null ? "" : e['unit']))
         .toList();
 
     return measurementList;
@@ -424,6 +424,7 @@ class HouseResidentVerificationController extends GetxController {
     final response = await Http.post(Uri.parse(Api.verifyHouseResident),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
           'Authorization': "Bearer $token"
         },
         body: jsonEncode(<String, dynamic>{

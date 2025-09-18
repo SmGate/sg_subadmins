@@ -30,8 +30,8 @@ class AddPhases extends GetView {
                     Get.offNamed(phasess, arguments: controller.user);
                   },
                   nameController: controller.addressController,
-                  from: 'From Phases',
-                  to: 'To Phases',
+                  from: 'From',
+                  to: 'To',
                   fromImg: 'assets/addphasesvg.svg',
                   toImg: 'assets/addphasesvg.svg',
                   fromController: controller.fromController,

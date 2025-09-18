@@ -28,19 +28,40 @@ class AddLocalBuildingFloors extends GetView {
                 },
                 fromController: controller.fromController,
                 toController: controller.toController,
-                buttonLoading: controller.isLoading,
+                buttonLoading: controller.loadingAddingFloors,
+                // Dropdown: Floor Type
+                floorTypes: controller.floorTypes,
+                selectedFloorType: controller.selectedFloorType,
+                onFloorTypeChanged: (value) =>
+                    controller.selectedFloorType.value = value!,
+
+                // Dropdown: Building
+                buildings: controller.societyBuildings,
+                selectedBuildingId: controller.selectedBuildingId,
+                onBuildingChanged: (value) =>
+                    controller.selectedBuildingId.value = value!,
+
+                // Custom Floor Field
+                customFloorsController: controller.customFloorsController,
+
+                // Loading state for building dropdown
+                loadingBuildings: controller.loadingBuildings,
                 buttonOnPressed: () {
-                  // print(controller.user.userid);
-                  // print(controller.user.bearerToken);
-                  if (!controller.isLoading) {
-                    controller.addLocalbuildingFloorsApi(
-                      bearerToken: controller.user.bearerToken!,
-                      from: controller.fromController.text.toString(),
-                      to: controller.toController.text.toString(),
-                      buildingid: controller.user.societyid!,
-                      subadminid: controller.user.userid!,
-                    );
-                  }
+                  controller.addFloors(
+                    buildingId: controller.selectedBuildingId.value.toString(),
+                    name: controller.customFloorsController.text,
+                    category: controller.selectedFloorType.value,
+                    from: controller.fromController.text.toString(),
+                    to: controller.toController.text.toString(),
+                  );
+
+                  // addLocalbuildingFloorsApi(
+                  //   bearerToken: controller.user.bearerToken!,
+                  //   from: controller.fromController.text.toString(),
+                  //   to: controller.toController.text.toString(),
+                  //   buildingid: controller.user.societyid!,
+                  //   subadminid: controller.user.userid!,
+                  // );
                 },
               ));
         });

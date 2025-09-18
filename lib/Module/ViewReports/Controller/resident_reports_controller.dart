@@ -22,7 +22,6 @@ class ResidentReportsController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
     userdata = this.user[0];
     residentId = user[1];
@@ -46,6 +45,7 @@ class ResidentReportsController extends GetxController {
           residentid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

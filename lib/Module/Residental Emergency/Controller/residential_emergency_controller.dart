@@ -15,17 +15,19 @@ class ResidentialEmergencyController extends GetxController {
 
   @override
   void onInit() {
-  
     super.onInit();
 
     userdata = data;
   }
 
   viewVistorsDetailApi(int subadminid, String token) async {
+    final userId =
+        userdata.structureType == 6 ? subadminid : userdata.societyid ?? 0;
     final response = await Http.get(
-      Uri.parse(Api.viewEmergency + "/" + subadminid.toString()),
+      Uri.parse(Api.viewEmergency + "/" + userId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

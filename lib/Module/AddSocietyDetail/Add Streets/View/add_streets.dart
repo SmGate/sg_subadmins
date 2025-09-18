@@ -50,8 +50,8 @@ class AddStreets extends GetView {
                     }
                   },
                   nameController: controller.addressController,
-                  from: 'From Streets',
-                  to: 'To Streets',
+                  from: 'From',
+                  to: 'To',
                   fromImg: 'assets/addstreetsvg.svg',
                   toImg: 'assets/addstreetsvg.svg',
                   fromController: controller.fromController,

@@ -13,8 +13,7 @@ class MyText extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
+    return Center(
       child: Text(name!,
           style: GoogleFonts.ubuntu(
               fontStyle: FontStyle.normal,

@@ -1,3 +1,5 @@
+// // ignore_for_file: deprecated_member_use
+
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class BlockOrSocietyBuilding extends GetView {
             onWillPop: () async {
               Get.offAndToNamed(homescreen, arguments: controller.user);
 
-              return false;
+              return true;
             },
             child: SafeArea(
               child: Scaffold(
@@ -39,21 +41,33 @@ class BlockOrSocietyBuilding extends GetView {
                       crossAxisCount: 2,
                       crossAxisSpacing: 30,
                     ),
-                    children: [
-                      CustomGrid(
-                          onTap: () async {
-                            Get.toNamed(blocks, arguments: controller.user);
-                          },
-                          text: 'Add Blocks'),
-                      CustomGrid(
-                          onTap: () async {
-                            Get.offAndToNamed(societybuildingscreen,
-                                arguments: controller.user);
-                          },
-                          text: 'Add Buildings'),
-                    ],
+                    children: controller.user.structureType == 6
+                        ? [
+                            CustomGrid(
+                              onTap: () async {
+                                Get.offAndToNamed(societybuildingscreen,
+                                    arguments: controller.user);
+                              },
+                              text: 'Add Buildings',
+                            ),
+                          ]
+                        : [
+                            CustomGrid(
+                              onTap: () async {
+                                Get.toNamed(blocks, arguments: controller.user);
+                              },
+                              text: 'Add Blocks',
+                            ),
+                            CustomGrid(
+                              onTap: () async {
+                                Get.offAndToNamed(societybuildingscreen,
+                                    arguments: controller.user);
+                              },
+                              text: 'Add Buildings',
+                            ),
+                          ],
                   ),
-                )
+                ),
               ])),
             ),
           );

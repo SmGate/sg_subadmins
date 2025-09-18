@@ -25,6 +25,7 @@ class AppImages {
   static const String residentType = "${basePath}resident_type.png";
   static const String propertytype = "${basePath}property_type.png";
   static const String splash = "${basePath}spalsh.png";
+  static const String supportTicket = "${basePath}support-ticket.png";
 
   static const String person = "${basePath}person.png";
   static const String gateNo = "${basePath}gateNo.png";
@@ -44,6 +45,9 @@ class AppImages {
   static const String logout = "${basePath}logout.png";
   static const String visitorsLogs = "${basePath}visitor-log.png";
   static const String description = "${basePath}description.png";
+  static const String moderator = "${basePath}moderator.png";
+  static const String maids = "${basePath}maids.png";
+  static const String shortTermRental = "${basePath}shortTermRental.png";
   // ======================== S V G  P A T H ====================================
   static const String drawer = "${svgBasePath}drawer.svg";
   static const String carSvg = "${svgBasePath}carsvg.svg";

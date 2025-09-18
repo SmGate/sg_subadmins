@@ -28,6 +28,8 @@ import 'package:societyadminapp/Module/AddSocietyDetail/SocietyBuildingFloor/Con
 import 'package:societyadminapp/Module/AddSocietyDetail/StreetOrBuilding/Controller/street_or_building_controller.dart';
 import 'package:societyadminapp/Module/AddSocietyDetail/Streets/Controller/street_controller.dart';
 import 'package:societyadminapp/Module/AddSocietyDetail/StructureType5HouseOrBuildingMiddleWare/Controller/structure_type5_house_or_building_controller.dart';
+import 'package:societyadminapp/Module/Chat%20Moderator/controller/blocked_user_controller.dart';
+import 'package:societyadminapp/Module/Chat%20Moderator/controller/moderation_controller.dart';
 import 'package:societyadminapp/Module/Events/Controller/event_screen_controller.dart';
 import 'package:societyadminapp/Module/GateKepeer/Controller/gate_keeper_controller.dart';
 import 'package:societyadminapp/Module/HomeScreen/Controller/home_screen_controller.dart';
@@ -35,10 +37,11 @@ import 'package:societyadminapp/Module/House%20Bills/Controller/generate_house_b
 import 'package:societyadminapp/Module/House%20Bills/Controller/generated_house_bill_controller.dart';
 import 'package:societyadminapp/Module/ImageHeroView/Controller/viewimage_controller.dart';
 import 'package:societyadminapp/Module/Login/Controller/login_controller.dart';
-import 'package:societyadminapp/Module/Measurements/Controller/add_measurements_controller.dart';
 import 'package:societyadminapp/Module/Measurements/Controller/measurement_view_controller.dart';
+import 'package:societyadminapp/Module/Measurements/Controller/measurements_controller.dart';
 import 'package:societyadminapp/Module/NoticeBoard/Controller/notice_board_controller.dart';
 import 'package:societyadminapp/Module/Residental%20Emergency/Controller/residential_emergency_controller.dart';
+import 'package:societyadminapp/Module/ShortTermRental/controller/short_term_rental_controller.dart';
 import 'package:societyadminapp/Module/Society%20Apartment%20Bills/Controller/generate_society_apartment_bills_controller.dart';
 import 'package:societyadminapp/Module/Society%20Apartment%20Bills/Controller/generated_society_apartment_bills_controller.dart';
 import 'package:societyadminapp/Module/SocietyRules/controller/society_rule_controller.dart';
@@ -49,6 +52,8 @@ import 'package:societyadminapp/Module/UnVerifiedResidents/Controller/local_buil
 import 'package:societyadminapp/Module/UnVerifiedResidents/Controller/unverified_resident_controller.dart';
 import 'package:societyadminapp/Module/UpdateNoticeBoard/Controller/update_notice_controller.dart';
 import 'package:societyadminapp/Module/Visitors%20Logs/controller/visitors_logs_controller.dart';
+import 'package:societyadminapp/Module/domestic_help/controller/domestic_help_controller.dart';
+import 'package:societyadminapp/Module/luggage_pass/controller/luggage_pass_controller.dart';
 import 'package:societyadminapp/Module/parking%20managment/controller/parking_management_controller.dart';
 import 'package:societyadminapp/Module/visitors_details/controller/visitor_details_controller.dart';
 import 'package:societyadminapp/Module/voting/controller/voting_controller.dart';
@@ -150,11 +155,14 @@ class ScreenBindings extends Bindings {
     Get.lazyPut(() => ViewFinanceManager());
     Get.lazyPut(() => UpdateFinanceManagerDetails());
     Get.lazyPut(() => VisitoreDetailsScreenController());
-
+    Get.lazyPut(() => BlockedUserController());
     Get.lazyPut(() => VotingController());
     Get.lazyPut(() => SocietyRuleController());
     Get.lazyPut(() => ParkingManagementController());
-
+    Get.lazyPut(() => ModerationController());
     Get.lazyPut(() => VisitorsLogsController());
+    Get.lazyPut(() => LuggagePassController());
+    Get.lazyPut(() => DomesticHelpCOntroller());
+    Get.lazyPut(() => ShortTermRentalController());
   }
 }

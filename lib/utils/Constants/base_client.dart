@@ -132,16 +132,15 @@ class BaseClientClass {
   }
 
   static dynamic handleResponse(http.Response response) {
+    final decodedBody = jsonDecode(response.body);
     switch (response.statusCode) {
       case 200:
         return response;
       case 400:
         return 'Bad Request';
       case 401:
-        return 'Unauthorized';
+        return decodedBody['message'] ?? response;
 
-      case 401:
-        return response;
       case 404:
         return 'Not Found';
       case 500:

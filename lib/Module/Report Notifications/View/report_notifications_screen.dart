@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:societyadminapp/Module/Report%20Notifications/Controller/notifications_controller.dart';
 import 'package:societyadminapp/Module/Report%20Notifications/Model/Notification.dart';
 import 'package:societyadminapp/Routes/set_routes.dart';
+import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/Widgets/loading.dart';
 import 'package:societyadminapp/utils/Constants/app_images.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
@@ -21,6 +21,10 @@ import '../../View Residents/components/Detail_shown_dialog_box.dart';
 import '../../../Widgets/empty_list.dart';
 
 class ReportNotificationsScreen extends GetView {
+  bool isTablet(BuildContext context) {
+    return MediaQuery.of(context).size.shortestSide >= 600;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NotificationsController>(
@@ -186,7 +190,7 @@ class ReportNotificationsScreen extends GetView {
                                                 });
                                           },
                                           child: Container(
-                                            width: 327.w,
+                                            width: double.infinity,
                                             margin: EdgeInsets.only(
                                                 left: 24.w,
                                                 right: 24.w,
@@ -268,14 +272,17 @@ class ReportNotificationsScreen extends GetView {
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        left: 90,
                                                         top: 20,
-                                                        bottom: 20),
-                                                    child: Row(children: [
-                                                      MyButton(
-                                                        onPressed: () {
-                                                          controller
-                                                              .AcceptButtonApi(
+                                                        bottom: 20,
+                                                        right: 20),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          MyButton(
+                                                            onPressed: () {
+                                                              controller.AcceptButtonApi(
                                                                   snapshot
                                                                       .data![
                                                                           index]
@@ -287,152 +294,138 @@ class ReportNotificationsScreen extends GetView {
                                                                   controller
                                                                       .userData
                                                                       .bearerToken!);
-                                                        },
-                                                        name: 'Accept',
-                                                        height: 30.w,
-                                                        width: 80,
-                                                        color:
-                                                            HexColor('#4EC018'),
-                                                        textColor:
-                                                            HexColor('#FFFFFF'),
-                                                        fontSize: 9.font,
-                                                        border: 8,
-                                                      ),
-                                                      9.pw,
-                                                      MyButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return AlertDialog(
-                                                                  elevation: 0,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  content: Container(
-                                                                      height: 313.h,
-                                                                      width: 346.73.w,
-                                                                      child: Stack(
-                                                                        alignment:
-                                                                            Alignment.topCenter,
-                                                                        children: <Widget>[
-                                                                          Container(
-                                                                            width:
-                                                                                MediaQuery.of(context).size.width * 2,
-                                                                            margin:
-                                                                                EdgeInsets.only(top: 30.h),
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: Colors.white,
-                                                                              borderRadius: BorderRadius.circular(12.r),
-                                                                            ),
-                                                                            child:
-                                                                                Column(
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: <Widget>[
-                                                                                Padding(
-                                                                                  padding: EdgeInsets.only(left: 37.w, top: 55.29.h),
-                                                                                  child: Text(
-                                                                                    'Reason',
-                                                                                    style: GoogleFonts.montserrat(color: HexColor('#4D4D4D'), fontStyle: FontStyle.normal, fontSize: ScreenUtil().setSp(14), fontWeight: FontWeight.w500),
-                                                                                  ),
+                                                            },
+                                                            name: 'Accept',
+                                                            height: 30.w,
+                                                            width: isTablet(
+                                                                    context)
+                                                                ? 150
+                                                                : 80,
+                                                            color: HexColor(
+                                                                '#4EC018'),
+                                                            textColor: HexColor(
+                                                                '#FFFFFF'),
+                                                            fontSize: 9.font,
+                                                            border: 8,
+                                                          ),
+                                                          9.pw,
+                                                          MyButton(
+                                                            onPressed: () {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return AlertDialog(
+                                                                      elevation:
+                                                                          0,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      content: Container(
+                                                                          height: 313.h,
+                                                                          width: 346.73.w,
+                                                                          child: Stack(
+                                                                            alignment:
+                                                                                Alignment.topCenter,
+                                                                            children: <Widget>[
+                                                                              Container(
+                                                                                width: MediaQuery.of(context).size.width * 2,
+                                                                                margin: EdgeInsets.only(top: 30.h),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.white,
+                                                                                  borderRadius: BorderRadius.circular(12.r),
                                                                                 ),
-                                                                                6.71.ph,
-                                                                                Form(
-                                                                                  key: controller.formKey,
-                                                                                  child: Container(
-                                                                                    height: 97.h,
-                                                                                    width: 273.w,
-                                                                                    margin: EdgeInsets.only(top: 9.75.h, left: 37.w, right: 37.w),
-                                                                                    decoration: BoxDecoration(
-                                                                                      // color: HexColor('#F9F9FA'),
-                                                                                      boxShadow: [
-                                                                                        BoxShadow(
-                                                                                          color: HexColor('#F9F9FA'),
-                                                                                          //blurRadius: 30.0, // soften the shadow
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: <Widget>[
+                                                                                    Padding(
+                                                                                      padding: EdgeInsets.only(left: 37.w, top: 20.29.h),
+                                                                                      child: Text(
+                                                                                        'Reason',
+                                                                                        style: GoogleFonts.montserrat(color: HexColor('#4D4D4D'), fontStyle: FontStyle.normal, fontSize: ScreenUtil().setSp(14), fontWeight: FontWeight.w500),
+                                                                                      ),
+                                                                                    ),
+                                                                                    6.71.ph,
+                                                                                    Form(
+                                                                                      key: controller.formKey,
+                                                                                      child: Container(
+                                                                                        height: 97.h,
+                                                                                        width: 273.w,
+                                                                                        margin: EdgeInsets.only(top: 9.75.h, left: 37.w, right: 37.w),
+                                                                                        decoration: BoxDecoration(
+                                                                                          // color: HexColor('#F9F9FA'),
+                                                                                          boxShadow: [
+                                                                                            BoxShadow(
+                                                                                              color: HexColor('#F9F9FA'),
+                                                                                              //blurRadius: 30.0, // soften the shadow
 
-                                                                                          spreadRadius: 20,
-                                                                                          offset: Offset(
-                                                                                            5.0, // Move to right 5  horizontally
-                                                                                            5.0, // Move to bottom 5 Vertically
+                                                                                              spreadRadius: 20,
+                                                                                              offset: Offset(
+                                                                                                5.0, // Move to right 5  horizontally
+                                                                                                5.0, // Move to bottom 5 Vertically
+                                                                                              ),
+                                                                                            )
+                                                                                          ],
+                                                                                        ),
+                                                                                        child: TextFormField(
+                                                                                          validator: (val) {
+                                                                                            if (val!.isEmpty) {
+                                                                                              return 'ENTER REASON';
+                                                                                            }
+                                                                                            return null;
+                                                                                          },
+                                                                                          decoration: InputDecoration(
+                                                                                            hintText: 'Reason',
+                                                                                            contentPadding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                                                                                            fillColor: HexColor('#F9F9FA'),
+                                                                                            filled: true,
+                                                                                            enabledBorder: InputBorder.none,
+                                                                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
                                                                                           ),
-                                                                                        )
-                                                                                      ],
-                                                                                    ),
-                                                                                    child: TextFormField(
-                                                                                      validator: (val) {
-                                                                                        if (val!.isEmpty) {
-                                                                                          return 'ENTER REASON';
-                                                                                        }
-                                                                                        return null;
-                                                                                      },
-                                                                                      decoration: InputDecoration(
-                                                                                        hintText: 'Reason',
-                                                                                        contentPadding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                                                                                        fillColor: HexColor('#F9F9FA'),
-                                                                                        filled: true,
-                                                                                        enabledBorder: InputBorder.none,
-                                                                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
+                                                                                          controller: controller.rejectcontroller,
+                                                                                        ),
                                                                                       ),
-                                                                                      controller: controller.rejectcontroller,
                                                                                     ),
-                                                                                  ),
-                                                                                ),
-                                                                                48.ph,
-                                                                                InkWell(
-                                                                                  onTap: () {
-                                                                                    if (controller.formKey.currentState!.validate()) {
-                                                                                      controller.RejectButtonApi(snapshot.data![index].id!, snapshot.data![index].userid!, controller.rejectcontroller.text, controller.userData.bearerToken!);
-                                                                                      Get.back();
-                                                                                    } else {
-                                                                                      return null;
-                                                                                    }
-                                                                                  },
-                                                                                  child: Center(
-                                                                                    child: Container(
-                                                                                      height: 43.0.h,
-                                                                                      width: 180.0.w,
-                                                                                      decoration: BoxDecoration(
-                                                                                        borderRadius: BorderRadius.circular(10.r),
-                                                                                        color: primaryColor,
-                                                                                        boxShadow: [
-                                                                                          BoxShadow(spreadRadius: 2, blurRadius: 12, color: Color.fromARGB(255, 128, 126, 126))
-                                                                                        ],
+                                                                                    48.ph,
+                                                                                    Center(
+                                                                                      child: MyButton(
+                                                                                        gradient: AppGradients.buttonGradient,
+                                                                                        name: "Save",
+                                                                                        onPressed: () {
+                                                                                          if (controller.formKey.currentState!.validate()) {
+                                                                                            controller.RejectButtonApi(snapshot.data![index].id!, snapshot.data![index].userid!, controller.rejectcontroller.text, controller.userData.bearerToken!);
+                                                                                            Get.back();
+                                                                                          } else {
+                                                                                            return null;
+                                                                                          }
+                                                                                        },
                                                                                       ),
-                                                                                      child: Center(
-                                                                                          child: Text(
-                                                                                        'Save',
-                                                                                        style: GoogleFonts.ubuntu(color: HexColor('#FFFFFF')),
-                                                                                      )),
-                                                                                    ),
-                                                                                  ),
+                                                                                    )
+                                                                                  ],
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                          CircleAvatar(
-                                                                              backgroundColor: primaryColor,
-                                                                              maxRadius: 30.0,
-                                                                              child: SvgPicture.asset('assets/reason_vector.svg')),
-                                                                        ],
-                                                                      )),
-                                                                );
-                                                              });
-                                                        },
-                                                        name: 'Reject',
-                                                        width: 80,
-                                                        height: 30.w,
-                                                        color:
-                                                            HexColor('#ED0909'),
-                                                        textColor:
-                                                            HexColor('#FFFFFF'),
-                                                        fontSize: 9.font,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        border: 8,
-                                                      ),
-                                                    ]),
+                                                                              ),
+                                                                            ],
+                                                                          )),
+                                                                    );
+                                                                  });
+                                                            },
+                                                            name: 'Reject',
+                                                            width: isTablet(
+                                                                    context)
+                                                                ? 150
+                                                                : 80,
+                                                            height: 30.w,
+                                                            color: HexColor(
+                                                                '#ED0909'),
+                                                            textColor: HexColor(
+                                                                '#FFFFFF'),
+                                                            fontSize: 9.font,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            border: 8,
+                                                          ),
+                                                        ]),
                                                   ),
                                                 ],
                                               ),

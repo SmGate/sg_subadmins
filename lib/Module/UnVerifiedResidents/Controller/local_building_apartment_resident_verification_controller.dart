@@ -181,7 +181,6 @@ class LocalBuildingApartmentResidentVerificationController
 
   @override
   void onInit() {
-   
     super.onInit();
 
     userdata = data[0];
@@ -240,6 +239,7 @@ class LocalBuildingApartmentResidentVerificationController
         await Http.post(Uri.parse(Api.verifyLocalBuildingApartmentResident),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
+              'Accept': 'application/json',
               'Authorization': "Bearer $token"
             },
             body: jsonEncode(<String, dynamic>{

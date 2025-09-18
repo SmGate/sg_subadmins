@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:societyadminapp/Module/UnVerifiedResidents/Model/Resident%20Model/ApartmentResidentModel.dart';
 import 'package:societyadminapp/Module/UnVerifiedResidents/Model/Resident%20Model/HouseResident.dart';
+import 'package:societyadminapp/Module/UnVerifiedResidents/Model/reject_resident_verification_model.dart';
 import '../../../utils/Constants/api_routes.dart';
 import '../../../../Model/User.dart';
 
@@ -33,6 +34,7 @@ class UnVerifiedResidentController extends GetxController {
           status.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -59,15 +61,18 @@ class UnVerifiedResidentController extends GetxController {
       required String token,
       required int status}) async {
     print(token);
-
+    var finalId = userdata.structureType == 6
+        ? subadminid
+        : userdata.societyid.toString();
     final response = await Http.get(
       Uri.parse(Api.unverifiedApartmentResident.toString() +
           '/' +
-          subadminid.toString() +
+          finalId.toString() +
           '/' +
           status.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -96,6 +101,7 @@ class UnVerifiedResidentController extends GetxController {
           status.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -124,5 +130,43 @@ class UnVerifiedResidentController extends GetxController {
   int _generateCacheKey(int subadminid, String token, int tabIndex) {
     final key = '$subadminid-$token-$tabIndex';
     return key.hashCode;
+  }
+
+  ////
+  Future<void> rejectResidentVerification({
+    required String token,
+    required int residentId,
+    required String reason,
+  }) async {
+    final uri = Uri.parse(Api.rejectVerification.toString());
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = jsonEncode({
+      'residentid': residentId, 
+      'reason': reason,
+    });
+
+    final response = await Http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Reject verification failed '
+          '(${response.statusCode}): ${response.body}');
+    }
+
+    try {
+      final decoded = jsonDecode(response.body);
+
+      if (decoded is Map) {
+        final parsed = RejectResidentVerification.fromJson(
+          Map<String, dynamic>.from(decoded),
+        );
+        if (parsed.success == false) {
+          throw Exception('Reject verification not accepted by server.');
+        }
+      }
+    } catch (_) {}
   }
 }

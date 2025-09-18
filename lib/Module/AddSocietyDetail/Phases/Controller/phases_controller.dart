@@ -12,7 +12,7 @@ import '../Model/Phases.dart';
 
 class PhasesController extends GetxController {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  var  data= Get.arguments;
+  var data = Get.arguments;
   late final User user;
   Phases? phases;
 
@@ -23,14 +23,12 @@ class PhasesController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
     user = data;
   }
 
-
-
-  Future<Phases> phasesApi({required int societyid, required String token}) async {
+  Future<Phases> phasesApi(
+      {required int societyid, required String token}) async {
     print("${societyid.toString()}");
     print(token);
 
@@ -38,6 +36,7 @@ class PhasesController extends GetxController {
       Uri.parse(Api.phases + "/" + societyid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -80,12 +79,10 @@ class PhasesController extends GetxController {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body.toString());
-      
+
       Get.snackbar("Phases Add Successfully", "");
 
-
       Get.offAndToNamed(phasess, arguments: user);
-
     } else if (response.statusCode == 403) {
       isLoading = false;
       update();
@@ -102,5 +99,4 @@ class PhasesController extends GetxController {
       Get.snackbar("Failed to Add Phases", "");
     }
   }
-  
 }

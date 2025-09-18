@@ -1,537 +1,291 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:societyadminapp/Module/parking%20managment/controller/parking_management_controller.dart';
-import 'package:societyadminapp/Routes/set_routes.dart';
-import 'package:societyadminapp/Widgets/My_Floating_Button.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/Widgets/loading.dart';
-import 'package:societyadminapp/Widgets/my_button.dart';
-import 'package:societyadminapp/Widgets/my_textform_field.dart';
-import 'package:societyadminapp/utils/Constants/app_images.dart';
-import 'package:societyadminapp/utils/Constants/constants.dart';
-import 'package:societyadminapp/utils/helpers/date_helpers.dart';
+import 'package:societyadminapp/Widgets/my_back_button.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import 'package:societyadminapp/utils/style/text_style.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../../Widgets/my_back_button.dart';
+import '../../../utils/Constants/constants.dart';
+import '../../../Routes/set_routes.dart';
+import '../components/dialog_box_elipse_heading.dart';
+import '../../../Widgets/my_button.dart';
+import '../components/reports_screen_card.dart';
+import '../Controller/resident_reports_controller.dart';
+import '../Model/ResidentReports.dart';
 
-class AssignedParking extends StatelessWidget {
-  AssignedParking({super.key});
-  var controller = Get.find<ParkingManagementController>();
+class UserReportsListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return GetBuilder<ResidentReportsController>(
+      init: ResidentReportsController(),
+      builder: (controller) => WillPopScope(
         onWillPop: () async {
-          Get.offNamed(homescreen, arguments: controller.user);
+          Get.offNamed(viewreportscreen, arguments: controller.userdata);
+
           return true;
         },
         child: SafeArea(
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.background,
-            floatingActionButton: MyFloatingButton(onPressed: () {
-              Get.offNamed(addAndAssignparking, arguments: controller.user);
-            }),
-            body: Form(
-              key: controller.formKey,
-              child: SingleChildScrollView(
-                child: Obx(
-                  () => controller.loading.value
-                      ? Center(
-                          child: Padding(
-                          padding: const EdgeInsets.only(top: 350),
-                          child: CircularIndicatorUnderWhiteBox(),
-                        ))
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MyBackButton(
-                              text:
-                                  controller.user.societyorbuildingname ?? "NA",
-                              onTap: () {
-                                Get.offNamed(homescreen,
-                                    arguments: controller.user);
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                                top: 20,
-                                right: 20,
-                              ),
-                              child: Text(
-                                "Select Parking Area",
-                                style: reusableTextStyle(
-                                    textStyle: GoogleFonts.dmSans(),
-                                    fontSize: 18.0,
-                                    color: AppColors.textBlack,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Container(
-                              height: 60,
-                              // color: Colors.red,
-                              child: ListView.builder(
-                                scrollDirection:
-                                    Axis.horizontal, // Set to horizontal
-                                itemCount: controller.getParkingSlotsModel.data!
-                                    .parkingLots?.length,
-                                itemBuilder: (context, i) {
-                                  double rightPadding = i ==
-                                          controller.getParkingSlotsModel.data!
-                                                  .parkingLots!.length -
-                                              1
-                                      ? 10
-                                      : 0;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      controller
-                                          .parkingAreaSelectedIndex.value = i;
+              backgroundColor: AppColors.background,
+              body: Column(
+                children: [
+                  MyBackButton(
+                    text: 'Complaints By Residents',
+                    onTap: () {
+                      Get.offNamed(viewreportscreen,
+                          arguments: controller.userdata);
+                    },
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<ResidentReports>>(
+                        future: controller.viewResidentsReportsApi(
+                            controller.userdata.userid!,
+                            controller.residentId,
+                            controller.userdata.bearerToken!),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null &&
+                                snapshot.data!.length != 0) {
+                              return ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return 
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  ReportsScreenCard(
+                                    heading:
+                                        snapshot.data![index].title.toString(),
+                                    heading1: snapshot.data![index].description
+                                        .toString(),
+                                    heading2: convertUtcToFormattedTimeAdd5Hours(
+                                            snapshot.data![index].updatedAt!) +
+                                        " " +
+                                        convertLaravelDateFormatToDayMonthYearDateFormat(
+                                            snapshot.data![index].updatedAt!),
+                                    buttonName: 'In Progress',
+                                    color: HexColor('#D20C0C'),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                            backgroundColor:
+                                                AppColors.globalWhite,
+                                            surfaceTintColor:
+                                                AppColors.globalWhite,
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Center(
+                                                    child: Text(
+                                                      'Report Detail',
+                                                      style: reusableTextStyle(
+                                                        textStyle: GoogleFonts
+                                                            .dmSans(),
+                                                        fontSize: 18.0,
+                                                        color:
+                                                            AppColors.textBlack,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  14.h.ph,
+                                                  DialogBoxElipseHeading(
+                                                    text: "Title",
+                                                  ),
+                                                  8.95.h.ph,
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.w),
+                                                    child: Text(
+                                                      snapshot.data![index]
+                                                              .title ??
+                                                          "",
+                                                      style: reusableTextStyle(
+                                                        textStyle: GoogleFonts
+                                                            .dmSans(),
+                                                        fontSize: 12.0,
+                                                        color:
+                                                            AppColors.textBlack,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  8.95.h.ph,
+                                                  DialogBoxElipseHeading(
+                                                    text: "Description",
+                                                  ),
+                                                  8.95.h.ph,
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.w),
+                                                    child: Text(
+                                                      snapshot.data![index]
+                                                              .description ??
+                                                          "",
+                                                      style: reusableTextStyle(
+                                                        textStyle: GoogleFonts
+                                                            .dmSans(),
+                                                        fontSize: 12.0,
+                                                        color:
+                                                            AppColors.textBlack,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  8.95.h.ph,
+                                                  DialogBoxElipseHeading(
+                                                    text: "Mobile No",
+                                                  ),
+                                                  8.95.h.ph,
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.w),
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          controller
+                                                                  .residentMobileno ??
+                                                              "",
+                                                          style:
+                                                              reusableTextStyle(
+                                                            textStyle:
+                                                                GoogleFonts
+                                                                    .dmSans(),
+                                                            fontSize: 12.0,
+                                                            color: AppColors
+                                                                .textBlack,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 4,
+                                                        ),
+                                                        IconButton(
+                                                            onPressed:
+                                                                () async {
+                                                              controller.uri =
+                                                                  Uri.parse(
+                                                                      "tel://${controller.residentMobileno}");
+
+                                                              try {
+                                                                await launchUrl(
+                                                                    controller
+                                                                        .uri!);
+                                                                controller.uri =
+                                                                    null;
+                                                              } catch (e) {}
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.call,
+                                                              color:
+                                                                  Colors.green,
+                                                            ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  8.95.h.ph,
+                                                  DialogBoxElipseHeading(
+                                                    text: "Name",
+                                                  ),
+                                                  8.95.h.ph,
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.w),
+                                                    child: Text(
+                                                      controller.residentName ??
+                                                          "",
+                                                      style: reusableTextStyle(
+                                                        textStyle: GoogleFonts
+                                                            .dmSans(),
+                                                        fontSize: 12.0,
+                                                        color:
+                                                            AppColors.textBlack,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  8.95.h.ph,
+                                                  DialogBoxElipseHeading(
+                                                    text: "Address",
+                                                  ),
+                                                  8.95.h.ph,
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.w),
+                                                    child: Text(
+                                                      controller
+                                                              .residentAddress ??
+                                                          "",
+                                                      style: reusableTextStyle(
+                                                        textStyle: GoogleFonts
+                                                            .dmSans(),
+                                                        fontSize: 12.0,
+                                                        color:
+                                                            AppColors.textBlack,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  14.h.ph,
+                                                  Center(
+                                                    child: MyButton(
+                                                      gradient: AppGradients
+                                                          .buttonGradient,
+                                                      border: 4.r,
+                                                      width: double.infinity,
+                                                      height: 45.w,
+                                                      name: 'Ok',
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                    ),
+                                                  ),
+                                                  14.h.ph,
+                                                ],
+                                              ),
+                                            )),
+                                      );
                                     },
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          left: i == 0 ? 10 : 10,
-                                          top: 10,
-                                          bottom: 10,
-                                          right: rightPadding),
-                                      width: 100,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: controller
-                                                    .parkingAreaSelectedIndex
-                                                    .value ==
-                                                i
-                                            ? AppColors.appThem
-                                            : AppColors.globalWhite,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          controller.getParkingSlotsModel.data!
-                                                  .parkingLots?[i].name ??
-                                              "",
-                                          style: TextStyle(
-                                              color: controller
-                                                          .parkingAreaSelectedIndex
-                                                          .value ==
-                                                      i
-                                                  ? AppColors.globalWhite
-                                                  : AppColors.textBlack),
-                                        ),
-                                      ),
-                                    ),
                                   );
                                 },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20, bottom: 20, left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 45,
-                                    width: 150,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 16.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(
-                                          8.0), // Rounded edges
-                                      border: Border.all(
-                                        color: AppColors.appThem,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    child: DropdownButtonFormField<String>(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-
-                                      value: controller.selectedStatus.value,
-                                      items: ['All', 'available', 'assigned']
-                                          .map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newValue) {
-                                        controller.selectedStatus.value =
-                                            newValue!;
-
-                                        // controller.filterSlotsByStatusAndName(
-                                        //     controller.selectedStatus.value,
-                                        //     controller
-                                        //             .getParkingSlotsModel
-                                        //             .data!
-                                        //             .parkingLots![controller
-                                        //                 .parkingAreaSelectedIndex
-                                        //                 .value]
-                                        //             .name ??
-                                        //         "");
-                                      },
-                                      icon: Icon(Icons
-                                          .arrow_drop_down), // Custom dropdown icon
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    "Total Capacity :  ",
-                                    style: reusableTextStyle(
-                                        textStyle: GoogleFonts.dmSans(),
-                                        fontSize: 14.0,
-                                        color: AppColors.textBlack,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "",
-                                    style: reusableTextStyle(
-                                        textStyle: GoogleFonts.dmSans(),
-                                        fontSize: 14.0,
-                                        color: AppColors.textBlack,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  )
-                                ],
-                              ),
-                            ),
-                            // controller.filteredSlots.length == 0
-                            //     ? Center(
-                            //         child: Padding(
-                            //         padding: const EdgeInsets.only(top: 150),
-                            //         child: Text(
-                            //           "No Data Found",
-                            //           style: reusableTextStyle(
-                            //               textStyle: GoogleFonts.dmSans(),
-                            //               fontSize: 14.0,
-                            //               color: AppColors.textBlack,
-                            //               fontWeight: FontWeight.bold),
-                            //         ),
-                            //       ))
-                            //     : Container(
-                            //         margin: EdgeInsets.all(12),
-                            //         height: 400,
-                            //         child: GridView.builder(
-                            //             gridDelegate:
-                            //                 const SliverGridDelegateWithMaxCrossAxisExtent(
-                            //                     maxCrossAxisExtent: 160,
-                            //                     childAspectRatio: 2 / 2.3,
-                            //                     crossAxisSpacing: 10,
-                            //                     mainAxisSpacing: 10),
-                            //             itemCount:
-                            //                   controller
-                            //                       .getParkingSlotsModel
-                            //                       .data!
-                            //                       .parkingLots.,
-                            //             itemBuilder: (BuildContext ctx, index) {
-                            //               return Container(
-                            //                 alignment: Alignment.center,
-                            //                 decoration: BoxDecoration(
-                            //                     color: AppColors.globalWhite,
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(15)),
-                            //                 child: Column(
-                            //                   mainAxisAlignment:
-                            //                       MainAxisAlignment.start,
-                            //                   crossAxisAlignment:
-                            //                       CrossAxisAlignment.start,
-                            //                   children: [
-                            //                     Align(
-                            //                       alignment: Alignment.topRight,
-                            //                       child: Container(
-                            //                         decoration: BoxDecoration(
-                            //                           color: controller
-                            //                                       .filteredSlots[
-                            //                                           index]
-                            //                                       .status ==
-                            //                                   "available"
-                            //                               ? Colors.green
-                            //                               : Colors.red,
-                            //                           borderRadius:
-                            //                               BorderRadius.only(
-                            //                             topRight:
-                            //                                 Radius.circular(
-                            //                                     12.0),
-                            //                           ),
-                            //                         ),
-                            //                         child: Padding(
-                            //                           padding:
-                            //                               const EdgeInsets.only(
-                            //                                   left: 8,
-                            //                                   right: 8),
-                            //                           child: Text(
-                            //                             controller
-                            //                                 .filteredSlots[
-                            //                                     index]
-                            //                                 .status
-                            //                                 .toString(),
-                            //                             style: TextStyle(
-                            //                                 color: AppColors
-                            //                                     .globalWhite),
-                            //                           ),
-                            //                         ),
-                            //                       ),
-                            //                     ),
-                            //                     SizedBox(
-                            //                       height: 10,
-                            //                     ),
-                            //                     Center(
-                            //                       child: Image.asset(
-                            //                         AppImages.parkinng,
-                            //                         height: 40,
-                            //                       ),
-                            //                     ),
-                            //                     Padding(
-                            //                       padding:
-                            //                           const EdgeInsets.only(
-                            //                               top: 10,
-                            //                               left: 10,
-                            //                               right: 10),
-                            //                       child: Row(
-                            //                         children: [
-                            //                           Text(
-                            //                             "Slot No",
-                            //                             style: reusableTextStyle(
-                            //                                 textStyle:
-                            //                                     GoogleFonts
-                            //                                         .dmSans(),
-                            //                                 fontSize: 11.0,
-                            //                                 color: AppColors
-                            //                                     .textBlack,
-                            //                                 fontWeight:
-                            //                                     FontWeight
-                            //                                         .bold),
-                            //                           ),
-                            //                           Spacer(),
-                            //                           Text(
-                            //                             controller
-                            //                                 .filteredSlots[
-                            //                                     index]
-                            //                                 .slotNumber
-                            //                                 .toString(),
-                            //                             style: reusableTextStyle(
-                            //                                 textStyle:
-                            //                                     GoogleFonts
-                            //                                         .dmSans(),
-                            //                                 fontSize: 12.0,
-                            //                                 color: AppColors
-                            //                                     .textBlack,
-                            //                                 fontWeight:
-                            //                                     FontWeight
-                            //                                         .bold),
-                            //                           ),
-                            //                         ],
-                            //                       ),
-                            //                     ),
-                            //                     Padding(
-                            //                       padding:
-                            //                           const EdgeInsets.only(
-                            //                               left: 10,
-                            //                               right: 10,
-                            //                               top: 10),
-                            //                       child: Column(
-                            //                         crossAxisAlignment:
-                            //                             CrossAxisAlignment
-                            //                                 .start,
-                            //                         children: [
-                            //                           Text(
-                            //                             "Resident :",
-                            //                             style: reusableTextStyle(
-                            //                                 textStyle:
-                            //                                     GoogleFonts
-                            //                                         .dmSans(),
-                            //                                 fontSize: 12.0,
-                            //                                 color: AppColors
-                            //                                     .textBlack,
-                            //                                 fontWeight:
-                            //                                     FontWeight
-                            //                                         .bold),
-                            //                           ),
-                            //                           Text(
-                            //                             controller
-                            //                                     .filteredSlots[
-                            //                                         index]
-                            //                                     .userName ??
-                            //                                 "NA",
-                            //                             style: reusableTextStyle(
-                            //                                 textStyle:
-                            //                                     GoogleFonts
-                            //                                         .dmSans(),
-                            //                                 fontSize: 12.0,
-                            //                                 color:
-                            //                                     AppColors.dark,
-                            //                                 fontWeight:
-                            //                                     FontWeight
-                            //                                         .bold),
-                            //                           ),
-                            //                         ],
-                            //                       ),
-                            //                     ),
-                            //                     controller.filteredSlots[index]
-                            //                                 .status ==
-                            //                             "available"
-                            //                         ? Center(
-                            //                             child: Container(
-                            //                               margin:
-                            //                                   EdgeInsets.only(
-                            //                                       top: 10),
-                            //                               height: 30,
-                            //                               child: ElevatedButton(
-                            //                                   style: ElevatedButton.styleFrom(
-                            //                                       backgroundColor:
-                            //                                           Colors
-                            //                                               .green,
-                            //                                       shape: RoundedRectangleBorder(
-                            //                                           borderRadius:
-                            //                                               BorderRadius.circular(
-                            //                                                   8))),
-                            //                                   onPressed: () {
-                            //                                     _showAssignParkingDialog(
-                            //                                         context:
-                            //                                             context,
-                            //                                         slotId: controller
-                            //                                             .filteredSlots[
-                            //                                                 index]
-                            //                                             .id,
-                            //                                         startDate:
-                            //                                             DateTime
-                            //                                                 .now(),
-                            //                                         slotNo: controller
-                            //                                             .filteredSlots[
-                            //                                                 index]
-                            //                                             .slotNumber
-                            //                                             .toString());
-                            //                                   },
-                            //                                   child: Text(
-                            //                                     "Assign Parking",
-                            //                                     style: TextStyle(
-                            //                                         color: AppColors
-                            //                                             .globalWhite,
-                            //                                         fontSize:
-                            //                                             11),
-                            //                                   )),
-                            //                             ),
-                            //                           )
-                            //                         : SizedBox()
-                            //                   ],
-                            //                 ),
-                            //               );
-                            //             }),
-                            //       ),
-                          ],
-                        ),
-                ),
-              ),
-            ),
-          ),
-        ));
-  }
-
-  void _showAssignParkingDialog(
-      {BuildContext? context,
-      int? slotId,
-      DateTime? startDate,
-      String? slotNo}) {
-    showDialog(
-      context: context!,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: Center(child: Text("Slot $slotNo")),
-            content: Obx(() => Form(
-                  key: controller.formKey1,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Search Resident",
-                        style: reusableTextStyle(
-                            textStyle: GoogleFonts.dmSans(),
-                            fontSize: 14.0,
-                            color: AppColors.textBlack,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      MyTextFormField(
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                        width: 300,
-                        controller: controller.searchResidentController,
-                        hintText: "Search Resident Here",
-                        labelText: "Search Resident Here",
-                        validator: emptyStringValidator,
-                        onChanged: (v) {
-                          if (v.length == 0) {
-                            controller.isParkingAreaSelected.value = false;
+                                itemCount: snapshot.data!.length,
+                              );
+                            } else {
+                              return Center(child: Text('no resident'));
+                            }
+                          } else if (snapshot.hasError) {
+                            return Icon(Icons.error_outline);
                           } else {
-                            controller.isParkingAreaSelected.value = true;
-                            controller.filterEntries(v);
+                            return Center(
+                                child: CircularIndicatorUnderWhiteBox());
                           }
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      controller.isParkingAreaSelected.value
-                          ? Container(
-                              height: 150,
-                              decoration:
-                                  BoxDecoration(color: AppColors.background),
-                              child: ListView.builder(
-                                  itemCount:
-                                      controller.filterResidentList.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      onTap: () {
-                                        controller
-                                                .searchResidentController.text =
-                                            "${controller.filterResidentList[index].firstname ?? ""}  ${controller.filterResidentList[index].lastname ?? ""}";
-
-                                        controller.residentId = controller
-                                            .filterResidentList[index]
-                                            .residentid;
-
-                                        controller.isParkingAreaSelected.value =
-                                            false;
-                                      },
-                                      leading: Text(
-                                          "${controller.filterResidentList[index].firstname ?? ""}  ${controller.filterResidentList[index].lastname ?? ""}"),
-                                    );
-                                  }),
-                            )
-                          : SizedBox(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                          child: MyButton(
-                        loading: controller.loadingAssignParking.value,
-                        gradient: AppGradients.buttonGradient,
-                        name: "ASSIGN",
-                        onPressed: () {
-                          if (controller.formKey1.currentState!.validate()) {
-                            controller.assignParking(
-                                slotId: slotId.toString(),
-                                residentId: controller.residentId.toString(),
-                                starDate: DateHelpers()
-                                    .formatDate(startDate.toString()),
-                                context: context);
-                          }
-                        },
-                      ))
-                    ],
+                        }),
                   ),
-                )));
-      },
+                ],
+              )),
+        ),
+      ),
     );
   }
 }

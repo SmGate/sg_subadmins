@@ -39,8 +39,8 @@ class AddBlocks extends GetView {
                     }
                   },
                   nameController: controller.addressController,
-                  from: 'From Blocks',
-                  to: 'To Houses',
+                  from: 'From',
+                  to: 'To',
                   fromImg: 'assets/addblocksvg.svg',
                   toImg: 'assets/addblocksvg.svg',
                   fromController: controller.fromController,

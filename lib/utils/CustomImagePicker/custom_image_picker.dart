@@ -14,6 +14,9 @@ class CustomImagePicker extends StatelessWidget {
   ImageProvider<Object>? backgroundImage;
   void Function()? camOnPressed;
   void Function()? galOnPressed;
+  bool isTablet(BuildContext context) {
+    return MediaQuery.of(context).size.shortestSide >= 600;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class CustomImagePicker extends StatelessWidget {
             backgroundColor: AppColors.background,
             backgroundImage: backgroundImage),
         Positioned(
-          left: 65.w,
+          left: isTablet(context) ? 50.w : 65.w,
           top: 65.h,
           child: InkWell(
             onTap: () {
@@ -48,7 +51,7 @@ class CustomImagePicker extends StatelessWidget {
                             children: <Widget>[
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                    primary: AppColors.appThem),
+                                    backgroundColor: AppColors.appThem),
                                 icon: Icon(
                                   Icons.camera,
                                   color: AppColors.globalWhite,
@@ -63,7 +66,7 @@ class CustomImagePicker extends StatelessWidget {
                               ),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                    primary: AppColors.appThem),
+                                    backgroundColor: AppColors.appThem),
                                 icon: Icon(
                                   Icons.image,
                                   color: AppColors.globalWhite,
@@ -104,6 +107,10 @@ class CustomImagePickerGallery extends StatelessWidget {
   ImageProvider<Object>? backgroundImage;
   void Function()? galOnPressed;
 
+  bool isTablet(BuildContext context) {
+    return MediaQuery.of(context).size.shortestSide >= 600;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -117,7 +124,7 @@ class CustomImagePickerGallery extends StatelessWidget {
               backgroundColor: AppColors.globalWhite,
               backgroundImage: backgroundImage),
           Positioned(
-            left: 65.w,
+            left: isTablet(context) ? 50.w : 65.w,
             top: 65.h,
             child: InkWell(
               onTap: () {

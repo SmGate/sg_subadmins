@@ -9,7 +9,6 @@ import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/Widgets/my_button.dart';
 import 'package:societyadminapp/utils/Constants/constants.dart';
-import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import 'package:societyadminapp/utils/style/text_style.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,7 +41,7 @@ class EmergencyDialog extends StatelessWidget {
               style: reusableTextStyle(
                 textStyle: GoogleFonts.dmSans(),
                 fontSize: 18.0,
-                color: AppColors.textBlack,
+                color: Colors.black, // Updated heading color
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -80,33 +79,11 @@ class EmergencyDialog extends StatelessWidget {
           8.95.h.ph,
           Padding(
             padding: EdgeInsets.only(left: 26.w),
-            child: Row(
-              children: [
-                Text(mobileNo ?? "",
-                    style: GoogleFonts.ubuntu(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp,
-                        color: HexColor('#606470'))),
-                SizedBox(
-                  width: 4,
-                ),
-                IconButton(
-                    onPressed: () async {
-                      final ResidentialEmergencyController controller =
-                          Get.find();
-                      controller.uri = Uri.parse("tel://${mobileNo}");
-
-                      try {
-                        await launchUrl(controller.uri!);
-                        controller.uri = null;
-                      } catch (e) {}
-                    },
-                    icon: Icon(
-                      Icons.call,
-                      color: Colors.green,
-                    ))
-              ],
-            ),
+            child: Text(mobileNo ?? "",
+                style: GoogleFonts.ubuntu(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                    color: HexColor('#606470'))),
           ),
           8.95.h.ph,
           DialogBoxElipseHeading(
@@ -120,17 +97,42 @@ class EmergencyDialog extends StatelessWidget {
                     fontSize: 11.sp, color: HexColor('#333333'))),
           ),
           14.h.ph,
-          Center(
-            child: MyButton(
-              gradient: AppGradients.buttonGradient,
-              border: 4.r,
-              width: double.infinity,
-              height: 40,
-              name: 'Ok',
-              onPressed: () {
-                Get.back();
-              },
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              MyButton(
+                gradient: AppGradients.buttonGradient,
+                border: 4.r,
+                width: 100,
+                height: 40,
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                name: 'Call',
+                onPressed: () async {
+                  final ResidentialEmergencyController controller = Get.find();
+                  controller.uri = Uri.parse("tel://${mobileNo}");
+
+                  try {
+                    await launchUrl(controller.uri!);
+                    controller.uri = null;
+                  } catch (e) {
+                    print("Could not launch call: $e");
+                  }
+                },
+              ),
+              MyButton(
+                gradient: AppGradients.buttonGradient,
+                border: 4.r,
+                height: 40,
+                width: 100,
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                name: 'Cancel',
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ],
           ),
           14.h.ph,
         ],

@@ -91,15 +91,18 @@ class AllSocietyRules extends StatelessWidget {
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                Text(
-                                                  data?.description ?? "",
-                                                  style: reusableTextStyle(
-                                                    textStyle:
-                                                        GoogleFonts.dmSans(),
-                                                    fontSize: 16.0,
-                                                    color: AppColors.dark,
-                                                    fontWeight:
-                                                        FontWeight.normal,
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Text(
+                                                    data?.description ?? "",
+                                                    style: reusableTextStyle(
+                                                      textStyle:
+                                                          GoogleFonts.dmSans(),
+                                                      fontSize: 16.0,
+                                                      color: AppColors.dark,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
                                                   ),
                                                 )
                                               ],

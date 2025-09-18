@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 
@@ -15,21 +16,21 @@ class GateKeeperController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
 
     user = userdata;
   }
 
   Future<List<Gatekeeper>> viewGatekeepersApi(
-      int gatekeeperid, String token) async {
-    print("subadminiid.toString() ${gatekeeperid.toString()}");
+      int subadminId, String token) async {
+    print("subadminiid.toString() ${subadminId.toString()}");
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.viewGatekeepers + "/" + gatekeeperid.toString()),
+      Uri.parse(Api.viewGatekeepers + "/" + subadminId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -60,31 +61,51 @@ class GateKeeperController extends GetxController {
     return li;
   }
 
-  Future deleteGateKeeperApi(int gatekeeperid, String token) async {
-    print(gatekeeperid.toString());
-    print(token);
+  Future<void> deleteGateKeeperApi(
+      int gatekeeperid, String token, BuildContext context) async {
+    try {
+      final response = await Http.get(
+        Uri.parse("${Api.deleteGatekeeper}/$gatekeeperid"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': "Bearer $token"
+        },
+      );
 
-    final response = await Http.get(
-      Uri.parse(Api.deleteGatekeeper + "/" + gatekeeperid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    var data = jsonDecode(response.body.toString());
-    var mydata = data['data'];
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body.toString());
+        final mydata = data['data'];
+        print('Deleted data: $mydata');
 
-    print('my data.......$mydata');
+        // Success feedback
+        Get.snackbar(
+          "Success",
+          "Gatekeeper deleted successfully.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        Navigator.of(context).pop();
+        // Refresh list
+        await viewGatekeepersApi(user.userid ?? 0, userdata.bearerToken!);
 
-    if (response.statusCode == 200) {
-      //listOfSubAdmi.clear();
+        // Get.back(); // Close the delete confirmation dialog
+        update();
+      } else {
+        final data = jsonDecode(response.body.toString());
+        String errorMsg = data['message'] ?? "Something went wrong";
 
-      viewGatekeepersApi(gatekeeperid, userdata.bearerToken!);
-
-      Get.back();
-
-      update();
+        Get.snackbar(
+          "Error",
+          errorMsg,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
-    update();
   }
 }

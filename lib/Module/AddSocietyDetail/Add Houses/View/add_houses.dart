@@ -65,8 +65,8 @@ class AddHouses extends GetView {
                       }
                     },
                     nameController: controller.addressController,
-                    from: 'From Houses',
-                    to: 'To Houses',
+                    from: 'From',
+                    to: 'To',
                     fromImg: 'assets/addhousesvg.svg',
                     toImg: 'assets/addhousesvg.svg',
                     fromController: controller.fromController,

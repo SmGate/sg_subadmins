@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:societyadminapp/Module/AddNoticeBoard/Controller/add_notice_board_controller.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/app_gradient.dart';
@@ -59,7 +57,7 @@ class AddNoticeBoardScreen extends GetView {
                           labelText: 'NOTICE TITLE',
                         ),
                         MyTextFormField(
-                          maxLines: 1,
+                          maxLines: 5,
                           // contentPadding: EdgeInsets.symmetric(
                           //     vertical: 30, horizontal: 20),
                           fillColor: Colors.white,
@@ -72,9 +70,6 @@ class AddNoticeBoardScreen extends GetView {
                           onTap: () {
                             controller.NoticeStartDate(context);
                           },
-                          suffixIcon: SvgPicture.asset(
-                              "assets/add_event_icon.svg",
-                              fit: BoxFit.scaleDown),
                           fillColor: Colors.white,
                           controller: controller.startnoticedateController,
                           validator: emptyStringValidator,
@@ -85,9 +80,6 @@ class AddNoticeBoardScreen extends GetView {
                           onTap: () {
                             controller.NoticeEndDate(context);
                           },
-                          suffixIcon: SvgPicture.asset(
-                              "assets/add_event_icon.svg",
-                              fit: BoxFit.scaleDown),
                           fillColor: Colors.white,
                           controller: controller.endnoticedateController,
                           validator: emptyStringValidator,
@@ -98,11 +90,6 @@ class AddNoticeBoardScreen extends GetView {
                           onTap: () {
                             controller.NoticeStartTime(context);
                           },
-                          suffixIcon: SvgPicture.asset(
-                            "assets/time_icon.svg",
-                            fit: BoxFit.scaleDown,
-                            color: HexColor('#BEBEBE'),
-                          ),
                           fillColor: Colors.white,
                           controller: controller.startnoticetimeController,
                           validator: emptyStringValidator,
@@ -113,9 +100,6 @@ class AddNoticeBoardScreen extends GetView {
                           onTap: () {
                             controller.NoticeEndTime(context);
                           },
-                          suffixIcon: SvgPicture.asset('assets/time_icon.svg',
-                              color: HexColor('#BEBEBE'),
-                              fit: BoxFit.scaleDown),
                           fillColor: Colors.white,
                           controller: controller.endnoticetimeController,
                           validator: emptyStringValidator,

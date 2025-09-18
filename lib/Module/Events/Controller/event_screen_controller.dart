@@ -17,13 +17,14 @@ class EventScreenController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
 
     userdata = user;
     print(userdata);
-    data =
-        viewEventsApi(userid: userdata.userid!, token: userdata.bearerToken!);
+    data = viewEventsApi(
+        userid: userdata.userid!,
+        token: userdata.bearerToken!,
+        societyId: userdata.societyid.toString());
   }
 
   setEventVal(val) {
@@ -32,21 +33,23 @@ class EventScreenController extends GetxController {
   }
 
   Future<Event> viewEventsApi(
-      {required int userid, required String token}) async {
+      {required int userid,
+      required String token,
+      required String societyId}) async {
     print("${userid.toString()}");
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.events + "/" + userid.toString()),
+      Uri.parse(
+          Api.events + "/" + userid.toString() + "/" + societyId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
     print(response.body);
     var data = jsonDecode(response.body.toString());
-
-
 
     if (response.statusCode == 200) {
       return Event.fromJson(data);
@@ -68,6 +71,7 @@ class EventScreenController extends GetxController {
       Uri.parse(Api.searchEvent + "/" + userid.toString() + "/" + query),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -83,8 +87,6 @@ class EventScreenController extends GetxController {
 
     return Event.fromJson(data);
   }
-
-  
 
   void selectImages() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
@@ -128,6 +130,7 @@ class EventScreenController extends GetxController {
       Uri.parse(Api.deleteEvent + "/" + eventid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -137,8 +140,10 @@ class EventScreenController extends GetxController {
     print('my data.......$mydata');
 
     if (response.statusCode == 200) {
-      this.data =
-          viewEventsApi(userid: userdata.userid!, token: userdata.bearerToken!);
+      this.data = viewEventsApi(
+          userid: userdata.userid!,
+          token: userdata.bearerToken!,
+          societyId: userdata.societyid.toString());
       Get.back();
       update();
     }

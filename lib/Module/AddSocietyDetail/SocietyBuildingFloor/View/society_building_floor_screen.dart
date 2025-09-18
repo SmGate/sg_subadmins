@@ -32,6 +32,9 @@ class SocietyBuildingFloorsScreen extends GetView {
               } else if (controller.user.structureType == 5) {
                 Get.offAndToNamed(societybuildingscreen,
                     arguments: controller.user);
+              } else if (controller.user.structureType == 6) {
+                Get.offAndToNamed(societybuildingscreen,
+                    arguments: controller.user);
               }
 
               return false;
@@ -74,40 +77,59 @@ class SocietyBuildingFloorsScreen extends GetView {
                           } else if (controller.user.structureType == 5) {
                             Get.offAndToNamed(societybuildingscreen,
                                 arguments: controller.user);
+                          } else if (controller.user.structureType == 6) {
+                            Get.offAndToNamed(societybuildingscreen,
+                                arguments: controller.user);
                           }
                         },
                       ),
                       20.ph,
                       Expanded(
-                          child: FutureBuilder(
-                              future: controller.futureFloors,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView.builder(
-                                    itemCount: snapshot.data.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return CustomList(
-                                          onTap: () {
-                                            Get.offAndToNamed(
-                                                societybuildingapartmentscreen,
-                                                arguments: [
-                                                  controller.user,
-                                                  snapshot.data.data[index].id,
-                                                  controller.buildingid
-                                                ]);
-                                          },
-                                          text: snapshot.data.data[index].name
-                                              .toString());
+                        child: FutureBuilder(
+                          future: controller.futureFloors,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularIndicatorUnderWhiteBox();
+                            } else if (snapshot.hasError) {
+                              return const Center(
+                                  child: Icon(Icons.error_outline));
+                            } else if (!snapshot.hasData ||
+                                snapshot.data == null ||
+                                snapshot.data.data == null ||
+                                snapshot.data.data.isEmpty) {
+                              return const Center(
+                                  child: Text("No floors found."));
+                            } else {
+                              return ListView.builder(
+                                itemCount: snapshot.data.data.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final floor = snapshot.data.data[index];
+                                  return CustomList(
+                                    onTap: () {
+                                      Get.offAndToNamed(
+                                          societybuildingapartmentscreen,
+                                          arguments: [
+                                            controller.user,
+                                            floor.id,
+                                            controller.buildingid
+                                          ]);
                                     },
+                                    text: floor.name ?? "",
+                                    text2:
+                                        floor.building?.societybuildingname ??
+                                            "",
+                                    text3: floor.category ?? "",
+                                    label2: "Building",
+                                    label3: "Floor Type",
                                   );
-                                } else if (snapshot.hasError) {
-                                  return Icon(Icons.error_outline);
-                                } else {
-                                  return CircularIndicatorUnderWhiteBox();
-                                }
-                              })),
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      )
                     ],
                   )),
             ),

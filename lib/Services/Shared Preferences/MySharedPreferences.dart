@@ -1,5 +1,7 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/Constants/shared_preferences_constants.dart';
@@ -24,6 +26,12 @@ class MySharedPreferences {
       value.setInt(roleIdSPKey, user.roleId ?? 0);
       value.setInt(societyidSPKey, user.societyid ?? 0);
       value.setInt(superadminidSPKey, user.superadminid ?? 0);
+      if (user.permissions != null) {
+        String permissionsJson = jsonEncode(user.permissions);
+        value.setString(societyPermissionKey, permissionsJson);
+      } else {
+        value.remove(societyPermissionKey); // Remove if permissions are null
+      }
     });
   }
 
@@ -48,6 +56,11 @@ class MySharedPreferences {
       value.getInt(roleIdSPKey) ?? value.setInt(roleIdSPKey, 0);
       value.getInt(societyidSPKey) ?? value.setInt(societyidSPKey, 0);
       value.getInt(superadminidSPKey) ?? value.setInt(superadminidSPKey, 0);
+      String? permissionsJson = value.getString(societyPermissionKey);
+      Map<String, bool>? permissions;
+      if (permissionsJson != null) {
+        permissions = Map<String, bool>.from(jsonDecode(permissionsJson));
+      }
 
       user = User(
         structureType: value.getInt(structuretypeSPKey),
@@ -64,6 +77,7 @@ class MySharedPreferences {
         mobileno: value.getString(mobileNoSPKey),
         societyid: value.getInt(societyidSPKey),
         superadminid: value.getInt(superadminidSPKey),
+        permissions: permissions,
       );
     });
 

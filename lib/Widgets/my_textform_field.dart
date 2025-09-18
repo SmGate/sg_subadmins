@@ -112,9 +112,9 @@ class MyTextFormField extends GetView {
                 fontWeight: FontWeight.w400,
                 fontSize: 15.sp,
                 color: labelTextColor ?? HexColor('#555555')),
-            hintStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: hintTextColor ?? HexColor("#555555"),
+            hintStyle: GoogleFonts.quicksand(
+              fontSize: 12.sp,
+              color: Colors.grey,
             ),
 
             hintText: hintText,

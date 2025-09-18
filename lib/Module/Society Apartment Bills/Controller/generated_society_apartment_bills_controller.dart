@@ -15,7 +15,6 @@ class GeneratedSocietyApartmentBillsController extends GetxController {
   String? lastname;
   @override
   void onInit() {
-   
     super.onInit();
 
     user = this.userdata;
@@ -27,6 +26,7 @@ class GeneratedSocietyApartmentBillsController extends GetxController {
           Api.generatedSocietyApartmentBill + "/" + subadminid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

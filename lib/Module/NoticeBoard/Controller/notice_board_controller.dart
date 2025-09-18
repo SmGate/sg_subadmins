@@ -18,20 +18,25 @@ class NoticeBoardController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
     print("init");
     userdata = this.user;
-    data = viewNoticeBoardApi(userdata.userid!, userdata.bearerToken!);
+    data = viewNoticeBoardApi(
+        userdata.userid!, userdata.bearerToken!, userdata.societyid.toString());
     update();
   }
 
   Future<List<NoticeBoardModel>> viewNoticeBoardApi(
-      int subadminid, String token) async {
+      int subadminid, String token, String societyId) async {
     final response = await Http.get(
-      Uri.parse(Api.viewAllNotices + "/" + subadminid.toString()),
+      Uri.parse(Api.viewAllNotices +
+          "/" +
+          subadminid.toString() +
+          "/" +
+          societyId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -65,6 +70,7 @@ class NoticeBoardController extends GetxController {
       Uri.parse(Api.deleteNotice + "/" + noticeid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -74,7 +80,8 @@ class NoticeBoardController extends GetxController {
     print('my data.......$mydata');
 
     if (response.statusCode == 200) {
-      this.data = viewNoticeBoardApi(userdata.userid!, userdata.bearerToken!);
+      this.data = viewNoticeBoardApi(userdata.userid!, userdata.bearerToken!,
+          userdata.societyid.toString());
       Get.back();
       update();
     }

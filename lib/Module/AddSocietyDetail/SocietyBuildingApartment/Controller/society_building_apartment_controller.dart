@@ -16,8 +16,6 @@ class SocietyBuildingApartmentController extends GetxController {
 
   @override
   void onInit() {
-   
-
     super.onInit();
 
     user = data[0];
@@ -35,6 +33,7 @@ class SocietyBuildingApartmentController extends GetxController {
       Uri.parse(Api.viewSocietyBuildingApartments + "/" + fid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
     );

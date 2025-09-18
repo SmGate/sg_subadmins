@@ -18,10 +18,8 @@ class NotificationsController extends GetxController {
   late final User userData;
   List<ReportNotification> li = [];
 
- 
   @override
   void onInit() {
- 
     super.onInit();
 
     userData = user;
@@ -39,6 +37,7 @@ class NotificationsController extends GetxController {
       Uri.parse(Api.pendingReports + "/" + subadminid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -77,6 +76,7 @@ class NotificationsController extends GetxController {
     final uri = Uri.parse(Api.updateReportStatus);
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
       'Authorization': "Bearer $token"
     };
     Map<String, dynamic> body = {
@@ -112,6 +112,7 @@ class NotificationsController extends GetxController {
     final uri = Uri.parse(Api.updateReportStatus);
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
       'Authorization': "Bearer $token"
     };
     Map<String, dynamic> body = {

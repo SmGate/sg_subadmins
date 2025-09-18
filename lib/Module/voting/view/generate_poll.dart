@@ -109,7 +109,9 @@ class _GeneratePollState extends State<GeneratePoll> {
                           ),
                         ),
                         child: Text(
-                          'Add More',
+                          votingController.options.length == 0
+                              ? "Add Option"
+                              : 'Add More',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -153,6 +155,7 @@ class _GeneratePollState extends State<GeneratePoll> {
                     itemCount: votingController.options.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        contentPadding: EdgeInsets.only(left: 40),
                         title: Text(
                             'Option ${index + 1}: ${votingController.options[index]}'),
                       );
@@ -174,7 +177,9 @@ class _GeneratePollState extends State<GeneratePoll> {
                               endTime:
                                   votingController.endnoticetimeController.text,
                               isResonable: votingController.isResonable.value,
-                              options: votingController.options);
+                              options: votingController.options,
+                              subadminId:
+                                  votingController.userdata?.userid.toString());
                         }
                       },
                     )),

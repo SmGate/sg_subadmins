@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:societyadminapp/Module/Measurements/Model/MeasurementModel.dart';
+
 import '../../Model/User.dart';
 
 class SessionController {
@@ -15,4 +17,6 @@ class SessionController {
   String supportEmail = "";
   String supportPhone = "";
   User user = User();
+
+  Data? measurementModel;
 }

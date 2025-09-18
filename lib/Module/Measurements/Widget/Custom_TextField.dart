@@ -9,16 +9,31 @@ import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import '../../../utils/Constants/constants.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({required this.controller, required this.hintText});
+  CustomTextField(
+      {required this.controller,
+      required this.hintText,
+      this.hasValidator = true,
+      this.hintStyle, // ✅ Add optional hint style
+      this.textInputType});
+
   TextEditingController? controller;
   String? hintText;
+  bool hasValidator;
+  TextStyle? hintStyle; // ✅ Optional parameter
+
+  TextInputType? textInputType = TextInputType.number;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: emptyStringValidator,
+      style: GoogleFonts.quicksand(
+        fontSize: 12.sp,
+        color: Colors.black,
+      ),
+      cursorColor: Colors.black,
+      validator: hasValidator ? emptyStringValidator : null,
       controller: controller,
-      keyboardType: TextInputType.number,
+      keyboardType: textInputType,
       decoration: InputDecoration(
         errorStyle: GoogleFonts.ubuntu(
           fontStyle: FontStyle.normal,
@@ -46,6 +61,11 @@ class CustomTextField extends StatelessWidget {
         border: InputBorder.none,
         contentPadding: EdgeInsets.only(top: 25.h, left: 12.w),
         hintText: hintText,
+        hintStyle: hintStyle ??
+            GoogleFonts.quicksand(
+              fontSize: 12.sp,
+              color: Colors.grey,
+            ),
       ),
     );
   }

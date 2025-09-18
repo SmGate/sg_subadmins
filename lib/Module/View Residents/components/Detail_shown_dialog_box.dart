@@ -55,7 +55,7 @@ class DetailShownDialogBox extends StatelessWidget {
                     ),
                     6.ph,
                     Text(
-                      text!,
+                      text ?? "",
                       style: reusableTextStyle(
                           textStyle: GoogleFonts.dmSans(),
                           fontSize: 14.0,

@@ -22,7 +22,7 @@ class DialogBoxElipseHeading extends StatelessWidget {
           style: reusableTextStyle(
             textStyle: GoogleFonts.dmSans(),
             fontSize: 14.0,
-            color: AppColors.dark,
+            color: AppColors.textBlack,
             fontWeight: FontWeight.bold,
           ),
         )

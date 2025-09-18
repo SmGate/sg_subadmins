@@ -6,17 +6,24 @@ import 'package:societyadminapp/Module/AddSocietyDetail/Add%20Streets/View/add_s
 import 'package:societyadminapp/Module/AddSocietyDetail/Blocks/View/blocks.dart';
 import 'package:societyadminapp/Module/AddSocietyDetail/Streets/View/streets.dart';
 import 'package:societyadminapp/Module/AdminProfile/View/admin_profile_screen.dart';
+import 'package:societyadminapp/Module/Chat%20Moderator/views/all_resident.dart';
+import 'package:societyadminapp/Module/Chat%20Moderator/views/blocked_user.dart';
 import 'package:societyadminapp/Module/Events/View/events_screen.dart';
 import 'package:societyadminapp/Module/Events/View/view_event_images_screen.dart';
 import 'package:societyadminapp/Module/GateKepeer/View/gate_keeper_screen.dart';
 import 'package:societyadminapp/Module/Login/View/login.dart';
 import 'package:societyadminapp/Module/Measurements/View/add_measurements.dart';
+import 'package:societyadminapp/Module/Measurements/View/edit_measurment.dart';
 import 'package:societyadminapp/Module/Measurements/View/measurements_view.dart';
 import 'package:societyadminapp/Module/NoticeBoard/View/notice_board_screen.dart';
 import 'package:societyadminapp/Module/Report%20Notifications/View/report_notifications_screen.dart';
+import 'package:societyadminapp/Module/ShortTermRental/view/rent_settlement_screen.dart';
+import 'package:societyadminapp/Module/ShortTermRental/view/short_term_rental.dart';
+import 'package:societyadminapp/Module/ShortTermRental/view/view_all_shortterm_rental.dart';
 import 'package:societyadminapp/Module/Society%20Apartment%20Bills/View/generate_society_apartment_bills.dart';
 import 'package:societyadminapp/Module/SocietyRules/view/add_society_rules.dart';
 import 'package:societyadminapp/Module/SocietyRules/view/society_rules.dart';
+import 'package:societyadminapp/Module/Splash/View/no_internet_screen.dart';
 import 'package:societyadminapp/Module/Splash/View/splash_screen.dart';
 import 'package:societyadminapp/Module/UnVerifiedResidents/View/apartment_resident_verification.dart';
 import 'package:societyadminapp/Module/UnVerifiedResidents/View/unverified_residents.dart';
@@ -25,14 +32,17 @@ import 'package:societyadminapp/Module/View%20Residents/View/view_residents.dart
 import 'package:societyadminapp/Module/ViewReports/View/reported_residents_screen.dart';
 import 'package:societyadminapp/Module/ViewReports/View/residents_report_list_screen.dart';
 import 'package:societyadminapp/Module/Visitors%20Logs/views/visitors_logs_screen.dart';
+import 'package:societyadminapp/Module/domestic_help/view/all_domestic_helper.dart';
+import 'package:societyadminapp/Module/domestic_help/view/domestic_help_screen.dart';
+import 'package:societyadminapp/Module/luggage_pass/view/get_all_luggage_passess.dart';
 import 'package:societyadminapp/Module/parking%20managment/view/assigned_parking.dart';
 import 'package:societyadminapp/Module/parking%20managment/view/add-assign_parking.dart';
+import 'package:societyadminapp/Module/support_ticket/view/all_supports_tickets.dart';
 import 'package:societyadminapp/Module/visitors_details/view/visitore_details_screen.dart';
 import 'package:societyadminapp/Module/voting/view/generate_poll.dart';
 import 'package:societyadminapp/Module/voting/view/voting_screen.dart';
 import 'package:societyadminapp/Routes/screen_binding.dart';
 import 'package:societyadminapp/Routes/set_routes.dart';
-
 import '../Module/Add Event/View/add_event.dart';
 import '../Module/Add Event/View/update_event.dart';
 import '../Module/AddGateKepeer/View/add_gatekepeer.dart';
@@ -468,6 +478,71 @@ class RouteManagement {
       GetPage(
           name: visitorsLogs,
           page: () => VisitorsLogsScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: showAllResident,
+          page: () => AllResidentList(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: noInternetConnection,
+          page: () => NoInternetConnectionScreen(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: blockedUser,
+          page: () => BlockedUser(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: getAllLuggagePass,
+          page: () => GetAllLuggagePassScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: domesticHelp,
+          page: () => DomeasticHelpScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: allDomesticHelp,
+          page: () => AllDomesticHelper(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: editMeasurment,
+          page: () => EditMeasurementScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: shortTermRental,
+          page: () => ShortTermRentalScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: allShortTermRental,
+          page: () => AllShortTermRentalScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: rentSettlement,
+          page: () => RentSettleMentScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: supportTicket,
+          page: () => AllSupportsTickets(),
           binding: ScreenBindings(),
           transition: Transition.noTransition),
     ];

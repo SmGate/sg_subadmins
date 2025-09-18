@@ -103,7 +103,9 @@ class AddAndAssignParking extends StatelessWidget {
                                                   .parkingAreaNameController
                                                   .text,
                                               totalSlots: controller
-                                                  .slotsContingController.text);
+                                                  .slotsContingController.text,
+                                              subadminId: controller.user.userid
+                                                  .toString());
                                         }
                                       },
                                     )),

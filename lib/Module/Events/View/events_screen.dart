@@ -65,7 +65,7 @@ class EventsScreen extends GetView {
                               color: AppColors.globalWhite,
                               icon: Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 12, left: 100),
+                                    const EdgeInsets.only(top: 12, left: 150),
                                 child: Icon(
                                   Icons.filter_list,
                                   color: AppColors.appThem,
@@ -287,6 +287,16 @@ class EventsScreen extends GetView {
                                                 enddate: snapshot
                                                     .data.data[index].enddate
                                                     .toString(),
+                                                startTIme: snapshot
+                                                    .data.data[index].startTime
+                                                    .toString(),
+                                                endTime: snapshot
+                                                    .data.data[index].endTime
+                                                    .toString(),
+                                                image: snapshot.data.data[index]
+                                                    .images[0].image
+                                                    .toString(),
+                                                isShowEvent: true,
                                               ),
                                             );
                                           },

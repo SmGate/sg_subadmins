@@ -5,18 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
-import 'package:societyadminapp/utils/style/text_style.dart';
 
-TextStyle myStyle = GoogleFonts.quicksand(
-  color: Color(0xFF6A7380),
-  fontWeight: FontWeight.w500,
-  fontSize: 14.font,
-);
-TextStyle myStyle2 = GoogleFonts.quicksand(
-  color: Color(0xFF0D0B0C),
-  fontSize: 14.font,
-  fontWeight: FontWeight.w600,
-);
+String displayValue(String? value) {
+  if (value == null || value.trim().isEmpty || value == "" || value == "null") {
+    return 'N/A';
+  }
+  return value;
+}
 
 class DynamicContainer extends StatelessWidget {
   DynamicContainer({
@@ -26,13 +21,24 @@ class DynamicContainer extends StatelessWidget {
     required this.tax,
     required this.appCharges,
     required this.area,
+    this.category,
+    this.lateCharges,
+    this.building,
+    this.floor,
+    this.apartment,
   });
+
   String? heading;
   String? unitType;
   String? serviceCharges;
   String? tax;
   String? appCharges;
   String? area;
+  String? category;
+  String? lateCharges;
+  String? building;
+  String? floor;
+  String? apartment;
 
   @override
   Widget build(BuildContext context) {
@@ -40,147 +46,83 @@ class DynamicContainer extends StatelessWidget {
       children: [
         15.ph,
         Container(
-          width: 329.w,
-          height: 230.h,
-          margin: EdgeInsets.only(left: 23.w, right: 23.w),
-          padding: EdgeInsets.only(left: 20.w, top: 20.h),
-          decoration: ShapeDecoration(
-            color: AppColors.globalWhite,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
+          margin: EdgeInsets.symmetric(horizontal: 23.w),
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                heading!,
-                style: reusableTextStyle(
-                  textStyle: GoogleFonts.dmSans(),
-                  fontSize: 18.0,
-                  color: AppColors.textBlack,
-                  fontWeight: FontWeight.bold,
+                heading ?? '',
+                style: GoogleFonts.poppins(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.appThem,
                 ),
               ),
               16.ph,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Unit Type',
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        'Service Charges',
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        'Tax',
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        'App Charges',
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        'Area',
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  70.pw,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        unitType!.toString(),
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        serviceCharges!.toString(),
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        tax!.toString(),
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        appCharges!.toString(),
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      16.ph,
-                      Text(
-                        area!.toString(),
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 14.0,
-                          color: AppColors.dark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              Divider(color: Colors.grey.shade300),
+              16.ph,
+              buildInfoRow('Unit Type', displayValue(unitType)),
+              buildInfoRow('Service Charges', displayValue(serviceCharges)),
+              buildInfoRow(
+                  'Late Charges', displayValue("${lateCharges ?? ''} %")),
+              buildInfoRow('Category', displayValue(category)),
+              buildInfoRow('Tax', displayValue("${tax ?? ''} %")),
+              buildInfoRow('Area', displayValue(area)),
+              buildInfoRow('Building', displayValue(building)),
+              buildInfoRow('Floor', displayValue(floor)),
+              buildInfoRow('Apartment', displayValue(apartment)),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildInfoRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+              '$label:',
+              style: GoogleFonts.ubuntu(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Text(
+              value,
+              style: GoogleFonts.ubuntu(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textBlack,
+              ),
+              textAlign: TextAlign.right,
+              softWrap: true,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

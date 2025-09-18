@@ -14,7 +14,7 @@ Widget EmergencyCard(AsyncSnapshot<dynamic> snapshot, int index) {
       width: double.infinity,
       child: Card(
         color: AppColors.globalWhite,
-        elevation: 8,
+        // elevation: 8,
         surfaceTintColor: AppColors.globalWhite,
         shape: RoundedRectangleBorder(
           side: BorderSide(

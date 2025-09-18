@@ -42,7 +42,6 @@ class HouseController extends GetxController {
 
   @override
   void onInit() async {
-   
     // sid=data[0];
     // bid=data[1];
     // pid=data[2];
@@ -97,6 +96,7 @@ class HouseController extends GetxController {
           Api.properties + "/" + dynamicid.toString() + "/" + type.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
     );

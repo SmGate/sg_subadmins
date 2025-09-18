@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as Http;
-import 'package:societyadminapp/Routes/set_routes.dart';
-
-import '../../../../utils/Constants/api_routes.dart';
+import 'package:societyadminapp/Module/ShortTermRental/model/get_society_buildings_model.dart';
+import 'package:societyadminapp/Module/ShortTermRental/service/add_short_term_rental_service.dart';
+import 'package:societyadminapp/core/models/add_floors_model.dart';
+import 'package:societyadminapp/core/service/floors_service.dart';
 import '../../../../Model/User.dart';
 
 class AddLocalBuildingFloorsController extends GetxController {
@@ -17,65 +15,122 @@ class AddLocalBuildingFloorsController extends GetxController {
 
   bool isLoading = false;
 
+  RxList<SocietyBuilding> societyBuildings = <SocietyBuilding>[].obs;
+  RxInt selectedBuildingId = 0.obs;
+
+  RxBool loadingBuildings = false.obs;
+  final floorTypes = ['Residential', 'Corporate', 'Commercial'];
+  final selectedFloorType = ''.obs; // Default empty or set to a default value
+
+  //============ ADD FLOORS NEW DATA
+  var loadingAddingFloors = false.obs;
+  String error = "";
+  var addFloorsModel = FloorResponse();
+
   @override
   void onInit() {
-   
     super.onInit();
 
     user = data;
+
+    fetchBuildings();
   }
 
   final fromController = TextEditingController();
   final toController = TextEditingController();
 
-  addLocalbuildingFloorsApi({
-    required String bearerToken,
-    required int buildingid,
-    required int subadminid,
-    required String from,
-    required String to,
-  }) async {
-    isLoading = true;
-    update();
+  TextEditingController customFloorsController = TextEditingController();
 
-    Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
-    var request =
-        Http.MultipartRequest('POST', Uri.parse(Api.addLocalBuildingFloors));
-    request.headers.addAll(headers);
+  Future<void> fetchBuildings() async {
+    loadingBuildings.value = true;
+    var response = await AddShortTermRentalService.getSocietyBuildings(
+        subadminId: user.societyid ?? 0);
+    loadingBuildings.value = false;
 
-    request.fields['from'] = from;
-    request.fields['to'] = to;
-
-    request.fields['buildingid'] = buildingid.toString();
-    request.fields['subadminid'] = subadminid.toString();
-
-    var responsed = await request.send();
-    var response = await Http.Response.fromStream(responsed);
-
-    print(response.body);
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body.toString());
-      print(data);
-      print(response.body);
-      Get.snackbar("Floors Add Successfully", "");
-
-      Get.offAndToNamed(localbuildingfloorsscreen, arguments: user);
-      isLoading = false;
-      update();
-    } else if (response.statusCode == 403) {
-      var data = jsonDecode(response.body.toString());
-
-      Get.snackbar(
-        "Error",
-        data.toString(),
-      );
-      isLoading = false;
-      update();
+    if (response is GetSocietyBuildingsModel) {
+      societyBuildings.value = response.data ?? [];
     } else {
-      Get.snackbar("Failed to Add Phases", "");
-      isLoading = false;
-      update();
+      Get.snackbar("Error", response.toString());
     }
   }
+
+  void addFloors({
+    String? buildingId,
+    String? name,
+    String? category,
+    String? from,
+    String? to,
+  }) async {
+    error = "";
+    loadingAddingFloors.value = true;
+
+    var res = await AddFloorsService.addFloors(
+        buildingId: buildingId,
+        name: name,
+        category: category,
+        from: from,
+        to: to);
+
+    loadingAddingFloors.value = false;
+
+    if (res is FloorResponse) {
+      addFloorsModel = res;
+      Get.snackbar("Message", addFloorsModel.message.toString());
+    } else {
+      error = res.toString();
+      Get.snackbar("Error", error);
+      loadingAddingFloors.value = false;
+    }
+  }
+
+  // addLocalbuildingFloorsApi({
+  //   required String bearerToken,
+  //   required int buildingid,
+  //   required int subadminid,
+  //   required String from,
+  //   required String to,
+  // }) async {
+  //   isLoading = true;
+  //   update();
+
+  //   Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
+  //   var request =
+  //       Http.MultipartRequest('POST', Uri.parse(Api.addLocalBuildingFloors));
+  //   request.headers.addAll(headers);
+
+  //   request.fields['from'] = from;
+  //   request.fields['to'] = to;
+
+  //   request.fields['buildingid'] = buildingid.toString();
+  //   request.fields['subadminid'] = subadminid.toString();
+
+  //   var responsed = await request.send();
+  //   var response = await Http.Response.fromStream(responsed);
+
+  //   print(response.body);
+
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body.toString());
+  //     print(data);
+  //     print(response.body);
+  //     Get.snackbar("Floors Add Successfully", "");
+
+  //     Get.offAndToNamed(localbuildingfloorsscreen, arguments: user);
+  //     isLoading = false;
+  //     update();
+  //   } else if (response.statusCode == 403) {
+  //     var data = jsonDecode(response.body.toString());
+
+  //     Get.snackbar(
+  //       "Error",
+  //       data.toString(),
+  //     );
+  //     isLoading = false;
+  //     update();
+  //   } else {
+  //     Get.snackbar("Failed to Add Phases", "");
+  //     isLoading = false;
+  //     update();
+  //   }
+  // }
 }

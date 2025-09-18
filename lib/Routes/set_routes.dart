@@ -57,13 +57,13 @@ const String addsocietybuildingfloors = '/AddSocietyBuildingFloors';
 const String societybuildingapartmentscreen = '/SocietyBuildingApartmentScreen';
 const String addsocietybuildingapartmentsscreen =
     '/AddSocietyBuildingApartmentsScreen';
-
 const String addfloors = '/AddFloors';
 const String floors = '/Floors';
 const String viewapartments = '/ViewApartments';
 const String addapartments = '/AddApartments';
 const String addmeasurements = '/AddMeasurements';
 const String measurementview = '/MeasurementView';
+const String editMeasurment = '/EditMeasurement';
 const String houseresidentverification = '/HouseResidentVerification';
 const String apartmentresidentverification = '/ApartmentResidentVerification';
 const String generatehousebills = '/GenerateHouseBills';
@@ -90,7 +90,6 @@ const String addlocalbuildingapartmentsscreen =
     '/AddLocalBuildingApartmentsScreen';
 const String structureType5HouseOrBuildingMiddlewareScreen =
     '/StructureType5HouseOrBuildingMiddlewareScreen';
-
 const String localBuildingApartmentResidentVerification =
     '/LocalBuildingApartmentResidentVerification';
 const String bills = '/Bills';
@@ -100,12 +99,20 @@ const String residentialEmergencyScreen = '/ResidentialEmergencyScreen';
 const String addFinanceManager = '/add-finance-manager';
 const String viewFinanceManager = '/view-finance-manager';
 const String updateFinanceManager = '/update-finance-manager';
-
 const String voting = '/voting';
 const String createPoll = '/create-poll';
 const String societyRule = '/society-rule';
 const String addAndAssignparking = '/addAndAssignparking';
 const String assignedParking = '/assignedParking';
 const String addSocietyRule = '/add-society-rule';
-
+const String showAllResident = '/all_residents';
 const String visitorsLogs = '/visitor-logs';
+const String blockedUser = '/blocked-user';
+const String noInternetConnection = '/noInternetConnection';
+const String getAllLuggagePass = '/getAllLuggagePass';
+const String domesticHelp = '/domesticHelp';
+const String allDomesticHelp = '/allDomesticHelp';
+const String shortTermRental = '/shortTermRental';
+const String allShortTermRental = '/allShortTermRental';
+const String rentSettlement = '/rentSettlement';
+const String supportTicket = '/supportTicket';

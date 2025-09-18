@@ -14,19 +14,24 @@ import 'package:societyadminapp/utils/style/text_style.dart';
 import '../../../Widgets/my_dialog_box.dart';
 
 class ResidentsNGateKeeperViewCard extends StatelessWidget {
-  ResidentsNGateKeeperViewCard({
-    required this.image,
-    required this.name,
-    required this.mobileno,
-    this.DeleteDialogPress,
-    this.updateOnPressed,
-    this.showButton = true,
-  });
+  ResidentsNGateKeeperViewCard(
+      {required this.image,
+      required this.name,
+      required this.mobileno,
+      this.DeleteDialogPress,
+      this.updateOnPressed,
+      this.isGateKeeper = false,
+      this.showButton = true,
+      this.isShowNexButton = false,
+      this.gateNo});
   String? image;
-
+  String? gateNo;
   String? name;
   String? mobileno;
   bool showButton;
+  bool isGateKeeper;
+
+  bool isShowNexButton;
 
   void Function()? DeleteDialogPress;
   void Function()? updateOnPressed;
@@ -52,118 +57,173 @@ class ResidentsNGateKeeperViewCard extends StatelessWidget {
         ],
         color: HexColor('#FFFFFF'),
       ),
-      height: 88.h,
-      child: Stack(children: [
-        Padding(
-          padding: EdgeInsets.only(top: 12.h, left: 12.w, bottom: 12.w),
-          child: CachedNetworkImage(
-            imageBuilder: (context, imageProvider) => Container(
-                width: 70.4000015258789.w,
-                height: 64.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6.400000095367432.r),
-                  color: Colors.white,
-                  image: DecorationImage(
-                      image: NetworkImage(image!), fit: BoxFit.cover),
-                )),
-            imageUrl: image.toString(),
-            placeholder: (context, url) => Column(
-              children: [
-                CircularProgressIndicator(
-                  color: AppColors.appThem,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        child: Column(
+          children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              CachedNetworkImage(
+                imageBuilder: (context, imageProvider) => Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.400000095367432.r),
+                      color: Colors.white,
+                      image: DecorationImage(
+                          image: NetworkImage(image ?? ""), fit: BoxFit.cover),
+                    )),
+                imageUrl: image.toString(),
+                placeholder: (context, url) => Column(
+                  children: [
+                    CircularProgressIndicator(
+                      color: AppColors.appThem,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          ),
-        ),
-        10.pw,
-        Padding(
-          padding: EdgeInsets.only(top: 12.h, left: 97.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: reusableTextStyle(
-                  textStyle: GoogleFonts.dmSans(),
-                  fontSize: 18.0,
-                  color: AppColors.textBlack,
-                  fontWeight: FontWeight.bold,
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+              10.pw,
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 220,
+                      child: Text(
+                        name ?? "",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: reusableTextStyle(
+                          textStyle: GoogleFonts.dmSans(),
+                          fontSize: 18.0,
+                          color: AppColors.textBlack,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    5.ph,
+                    Row(
+                      children: [
+                        Text(
+                          "Mobile No : ",
+                          style: reusableTextStyle(
+                            textStyle: GoogleFonts.dmSans(),
+                            fontSize: 14.0,
+                            color: AppColors.textBlack,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        Text(
+                          mobileno ?? "",
+                          style: reusableTextStyle(
+                            textStyle: GoogleFonts.dmSans(),
+                            fontSize: 14.0,
+                            color: AppColors.dark,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                    5.ph,
+                    isGateKeeper
+                        ? Row(
+                            children: [
+                              Text(
+                                "Gate No : ",
+                                style: reusableTextStyle(
+                                  textStyle: GoogleFonts.dmSans(),
+                                  fontSize: 14.0,
+                                  color: AppColors.textBlack,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              Text(
+                                gateNo ?? "",
+                                style: reusableTextStyle(
+                                  textStyle: GoogleFonts.dmSans(),
+                                  fontSize: 14.0,
+                                  color: AppColors.dark,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
+                    showButton
+                        ? SizedBox(
+                            height: 10,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ],
                 ),
               ),
-              5.ph,
-              Text(
-                mobileno!,
-                style: reusableTextStyle(
-                  textStyle: GoogleFonts.dmSans(),
-                  fontSize: 14.0,
-                  color: AppColors.dark,
-                  fontWeight: FontWeight.normal,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+            ]),
+            if (showButton)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    height: 35,
+                    width: 35,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: AppColors.appThem),
+                    child: IconButton(
+                      icon: SvgPicture.asset(AppImages.deleteNoticeBoard,
+                          color: AppColors.globalWhite,
+                          width: MediaQuery.of(context).size.width),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomDialog(
+                                image: SvgPicture.asset(
+                                    AppImages.dialogueDeleteIcon,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06),
+                                negativeBtnPressed: () {
+                                  Get.back();
+                                },
+                                title: "Are you sure !",
+                                content: "Do you want to delete this?",
+                                positiveBtnText: "Delete",
+                                negativeBtnText: "Cancel",
+                                positiveBtnPressed: DeleteDialogPress,
+                              );
+                            });
+                      },
+                    ),
+                  ),
+                  6.pw,
+                  Container(
+                    height: 35,
+                    width: 35,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: AppColors.appThem),
+                    child: IconButton(
+                      icon: SvgPicture.asset(AppImages.editIcon,
+                          color: AppColors.globalWhite,
+                          width: MediaQuery.of(context).size.width),
+                      onPressed: updateOnPressed,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+          ],
         ),
-        if (showButton)
-          Padding(
-            padding: EdgeInsets.only(left: 240.w, top: 55.h),
-            child: Row(
-              children: [
-                Container(
-                  height: 25.h,
-                  width: 25.w,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.r),
-                      color: AppColors.appThem),
-                  child: IconButton(
-                    icon: SvgPicture.asset(AppImages.deleteNoticeBoard,
-                        color: AppColors.globalWhite,
-                        width: MediaQuery.of(context).size.width),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CustomDialog(
-                              image: SvgPicture.asset(
-                                  AppImages.dialogueDeleteIcon,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06),
-                              negativeBtnPressed: () {
-                                Get.back();
-                              },
-                              title: "Are you sure !",
-                              content: "Do you want to delete this?",
-                              positiveBtnText: "Delete",
-                              negativeBtnText: "Cancel",
-                              positiveBtnPressed: DeleteDialogPress,
-                            );
-                          });
-                    },
-                  ),
-                ),
-                6.pw,
-                Container(
-                  height: 25.h,
-                  width: 25.w,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.r),
-                      color: AppColors.appThem),
-                  child: IconButton(
-                    icon: SvgPicture.asset(AppImages.editIcon,
-                        color: AppColors.globalWhite,
-                        width: MediaQuery.of(context).size.width),
-                    onPressed: updateOnPressed,
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ]),
+      ),
     );
   }
 }

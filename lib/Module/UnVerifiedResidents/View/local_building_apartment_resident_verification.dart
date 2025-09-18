@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/my_back_button.dart';
+import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 
 import '../../../utils/Constants/api_routes.dart';
-import '../../../utils/Constants/constants.dart';
 import '../../../Routes/set_routes.dart';
 import '../../../Widgets/my_button.dart';
 import '../Controller/local_building_apartment_resident_verification_controller.dart';
@@ -37,7 +38,7 @@ class LocalBuildingApartmentResidentVerification extends GetView {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       MyBackButton(
-                        text: 'Apartment Resident Verification',
+                        text: 'Apartment Verification',
                         onTap: () {
                           Get.offNamed(unverifiedresident,
                               arguments: controller.userdata);
@@ -160,7 +161,7 @@ class LocalBuildingApartmentResidentVerification extends GetView {
                               controller.houseaddressdetailController.text,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.quicksand(
-                                color: primaryColor,
+                                color: AppColors.appThem,
                                 fontSize: 14.font,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -168,6 +169,7 @@ class LocalBuildingApartmentResidentVerification extends GetView {
                             20.ph,
                             Center(
                               child: MyButton(
+                                gradient: AppGradients.buttonGradient,
                                 onPressed: () {
                                   if (!controller.loading) {
                                     controller.verifyApartmentResidentApi(

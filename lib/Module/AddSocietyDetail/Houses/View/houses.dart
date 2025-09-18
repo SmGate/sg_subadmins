@@ -137,8 +137,10 @@ class Houses extends GetView<HouseController> {
                                                       padding:
                                                           const EdgeInsets.all(
                                                               8.0),
-                                                      child: Image.asset(
-                                                        'assets/house1.png',
+                                                      child: Icon(
+                                                        Icons.house,
+                                                        color: AppColors
+                                                            .globalWhite,
                                                       ),
                                                     )),
                                                 text: snapshot

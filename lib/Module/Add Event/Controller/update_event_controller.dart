@@ -37,7 +37,6 @@ class UpdateEventScreenController extends GetxController {
 
   @override
   void onInit() {
-    
     super.onInit();
     user = arguments[0];
 
@@ -99,6 +98,7 @@ class UpdateEventScreenController extends GetxController {
       Uri.parse(Api.updateEvent),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{

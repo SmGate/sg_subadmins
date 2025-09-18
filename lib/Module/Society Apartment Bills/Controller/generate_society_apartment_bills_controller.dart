@@ -8,7 +8,6 @@ import 'package:societyadminapp/Routes/set_routes.dart';
 import '../../../utils/Constants/api_routes.dart';
 import '../../../../Model/User.dart';
 
-
 class GenerateSocietyApartmentBillsController extends GetxController {
   var userdata = Get.arguments;
 
@@ -20,7 +19,6 @@ class GenerateSocietyApartmentBillsController extends GetxController {
 
   @override
   void onInit() {
-  
     super.onInit();
     print("init");
     user = this.userdata;
@@ -99,6 +97,7 @@ class GenerateSocietyApartmentBillsController extends GetxController {
       Uri.parse(Api.generateSocietyApartmentBill),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
       body: jsonEncode(<String, dynamic>{

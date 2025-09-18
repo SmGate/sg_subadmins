@@ -102,6 +102,7 @@ class AddNoticeBoardScreenController extends GetxController {
       Uri.parse(Api.addNoticeboardDetail),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
       body: jsonEncode(<String, dynamic>{

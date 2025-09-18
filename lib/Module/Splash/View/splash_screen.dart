@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:societyadminapp/Routes/set_routes.dart';
@@ -16,9 +17,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool hasInternetConnection = true;
   void initState() {
     super.initState();
-    getUserSharedPreferencesData();
+    _checkInternetConnection();
   }
 
   void getUserSharedPreferencesData() async {
@@ -30,6 +32,25 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Timer(Duration(seconds: 3),
           () => Get.offAndToNamed(homescreen, arguments: user));
+    }
+  }
+
+  void _checkInternetConnection() async {
+    print("is this function call");
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        hasInternetConnection = false;
+        Get.offNamed(
+          noInternetConnection,
+        );
+      });
+    } else {
+      setState(() {
+        hasInternetConnection = true;
+      });
+
+      getUserSharedPreferencesData();
     }
   }
 

@@ -37,7 +37,7 @@ class GateKeeperScreen extends GetView {
             body: Column(
               children: [
                 MyBackButton(
-                  text: "Gatekeeper",
+                  text: "Gatekeepers",
                   onTap: () {
                     Get.offNamed(homescreen, arguments: controller.user);
                   },
@@ -45,7 +45,7 @@ class GateKeeperScreen extends GetView {
                 Expanded(
                   child: FutureBuilder(
                       future: controller.viewGatekeepersApi(
-                          controller.userdata.userid!,
+                          controller.user.userid ?? 0,
                           controller.userdata.bearerToken!),
                       builder: (context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData) {
@@ -211,8 +211,12 @@ class GateKeeperScreen extends GetView {
                                       DeleteDialogPress: () {
                                         controller.deleteGateKeeperApi(
                                             snapshot.data![index].gatekeeperid,
-                                            controller.userdata.bearerToken!);
+                                            controller.userdata.bearerToken!,
+                                            context);
                                       },
+                                      gateNo: snapshot.data![index].gateno
+                                          .toString(),
+                                      isGateKeeper: true,
                                     ));
                               },
                               itemCount: snapshot.data!.length,

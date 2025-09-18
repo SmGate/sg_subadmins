@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
-
+import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 
 class MyDropDown extends StatelessWidget {
   MyDropDown({
@@ -56,8 +56,10 @@ class MyDropDown extends StatelessWidget {
 }
 
 class SpanText extends StatelessWidget {
-  SpanText({required this.text});
+  SpanText({required this.text, this.hasValidator = true});
   String? text;
+
+  bool hasValidator = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +74,15 @@ class SpanText extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          TextSpan(
-            text: '*',
-            style: GoogleFonts.quicksand(
-              color: Color(0xFFFF6D17),
-              fontSize: 14.font,
-              fontWeight: FontWeight.w600,
+          if (hasValidator)
+            TextSpan(
+              text: '*',
+              style: GoogleFonts.quicksand(
+                color: AppColors.appThem,
+                fontSize: 14.font,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -18,6 +18,7 @@ class ReportsScreenCard extends StatelessWidget {
       this.heading,
       this.heading1,
       this.heading2,
+      this.address,
       this.onPressed,
       this.showImg = true,
       this.showIcon = true,
@@ -33,6 +34,8 @@ class ReportsScreenCard extends StatelessWidget {
   String? heading2;
   void Function()? onPressed;
   String? buttonName;
+
+  String? address;
   Color? color;
 
   @override
@@ -68,8 +71,8 @@ class ReportsScreenCard extends StatelessWidget {
                   if (showImg && img != null)
                     CachedNetworkImage(
                       imageBuilder: (context, imageProvider) => Container(
-                          width: 70.4000015258789.w,
-                          height: 64.h,
+                          width: 60,
+                          height: 60,
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(6.400000095367432.r),
@@ -92,28 +95,16 @@ class ReportsScreenCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        heading!,
-                        maxLines: 1,
-                        style: reusableTextStyle(
-                          textStyle: GoogleFonts.dmSans(),
-                          fontSize: 18.0,
-                          color: AppColors.textBlack,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      6.ph,
-                      SizedBox(
-                        width: 230,
+                      Container(
+                        width: 240,
                         child: Text(
-                          heading1!,
+                          heading ?? "",
                           maxLines: 2,
-                          overflow: TextOverflow.clip,
                           style: reusableTextStyle(
                             textStyle: GoogleFonts.dmSans(),
-                            fontSize: 14.0,
-                            color: AppColors.dark,
-                            fontWeight: FontWeight.normal,
+                            fontSize: 18.0,
+                            color: AppColors.textBlack,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -130,13 +121,62 @@ class ReportsScreenCard extends StatelessWidget {
                             ),
                             11.32.pw,
                           ],
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Phone No: ",
+                                style: reusableTextStyle(
+                                  textStyle: GoogleFonts.dmSans(),
+                                  fontSize: 14.0,
+                                  color: AppColors.textBlack,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                heading2 ?? "",
+                                style: reusableTextStyle(
+                                  textStyle: GoogleFonts.dmSans(),
+                                  fontSize: 14.0,
+                                  color: AppColors.dark,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            heading2!,
+                            "Address: ",
                             style: reusableTextStyle(
                               textStyle: GoogleFonts.dmSans(),
                               fontSize: 14.0,
-                              color: AppColors.dark,
-                              fontWeight: FontWeight.normal,
+                              color: AppColors.textBlack,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          SizedBox(
+                            width: 160,
+                            child: Text(
+                              address ?? "",
+                              style: reusableTextStyle(
+                                textStyle: GoogleFonts.dmSans(),
+                                fontSize: 14.0,
+                                color: AppColors.dark,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ),
                         ],
@@ -146,17 +186,17 @@ class ReportsScreenCard extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 10, top: 10, right: 10),
+                padding: EdgeInsets.only(bottom: 10, top: 20, right: 20),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: MyButton(
                       gradient: AppGradients.buttonGradient,
                       name: buttonName!,
                       color: color,
-                      fontSize: 8.font,
+                      fontSize: 12.font,
                       height: 30.h,
-                      width: 100.w,
                       fontWeight: FontWeight.w400,
+                      border: 6,
                       letterSpacing: 0.05,
                       onPressed: onPressed),
                 ),

@@ -17,6 +17,7 @@ class User {
   final int? superadminid;
   final int? structureType;
   final String? societyorbuildingname;
+  Map<String, dynamic>? permissions;
 
   // final List<GateKeeper>? gatekeeperlist;
 
@@ -38,7 +39,8 @@ class User {
       this.fcmtoken,
       this.superadminid,
       this.created_at,
-      this.updated_at
+      this.updated_at,
+      this.permissions
       // this.gatekeeperlist,
       });
 }

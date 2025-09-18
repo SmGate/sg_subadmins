@@ -20,7 +20,6 @@ class ViewFinanceManagerController extends GetxController {
 
   @override
   void onInit() {
-   
     super.onInit();
 
     user = userdata;
@@ -30,10 +29,12 @@ class ViewFinanceManagerController extends GetxController {
       {required subAdminId,
       required bearerToken,
       required BuildContext context}) async {
+    final id = user.structureType == 6 ? subAdminId : user.societyid.toString();
     var response = await Http.get(
-        Uri.parse(Api.financeManagerView + subAdminId.toString()),
+        Uri.parse(Api.financeManagerView + id.toString()),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
           'Authorization': "Bearer $bearerToken"
         });
     var data;
@@ -56,6 +57,7 @@ class ViewFinanceManagerController extends GetxController {
         Uri.parse(Api.financeManagerDelete + financeManagerId.toString()),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
           'Authorization': "Bearer $bearerToken"
         });
 

@@ -78,6 +78,7 @@ class HomeScreenController extends GetxController {
           status.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -104,6 +105,7 @@ class HomeScreenController extends GetxController {
       Uri.parse(Api.pendingReportsCount + "/" + userId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

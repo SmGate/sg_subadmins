@@ -96,7 +96,9 @@ class _AddSocietyRulesState extends State<AddSocietyRules> {
                           ),
                         ),
                         child: Text(
-                          'Add More',
+                          societyRulesController.rulesList.length == 0
+                              ? "Add"
+                              : 'Add More',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

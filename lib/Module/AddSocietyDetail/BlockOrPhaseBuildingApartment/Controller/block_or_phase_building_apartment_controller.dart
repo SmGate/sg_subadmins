@@ -11,21 +11,17 @@ class BlockOrPhaseBuildingApartmentsController extends GetxController {
   int? fid;
   int? bid;
   int? dynamicid;
-  
 
   late final User user;
 
   @override
   void onInit() {
-    
-
     super.onInit();
 
     user = data[0];
     fid = data[1];
     bid = data[2];
     dynamicid = data[3];
-    
   }
 
   Future<BlockOrPhaseBuildingApartment> SocietyBuildingApartmentsApi(
@@ -37,6 +33,7 @@ class BlockOrPhaseBuildingApartmentsController extends GetxController {
       Uri.parse(Api.viewSocietyBuildingApartments + "/" + fid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
     );

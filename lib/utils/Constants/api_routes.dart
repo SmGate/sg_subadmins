@@ -1,11 +1,16 @@
 class Api {
   ////live
-  static const String imageBaseUrl = 'https://www.api.smartgate.pk/storage/';
-  static const String baseUrl = 'https://www.api.smartgate.pk/api/';
+  static const String imageBaseUrl =
+      'https://www.mobile-api.smartgate.pk/storage/';
+  static const String baseUrl = 'https://www.mobile-api.smartgate.pk/api/';
 
   ////local
-  // static const String imageBaseUrl = 'http://192.168.0.100:8080/storage/';
-  // static const String baseUrl = 'http://192.168.0.100:8080/api/';
+
+  // static const String imageBaseUrl =
+  //     'https://www.stagging.smartgate.pk/storage/';
+  // static const String baseUrl = 'https://www.stagging.smartgate.pk/api/';
+
+  ///.   ===========================================
   static const String login = baseUrl + "login";
   static const String fcmTokenRefresh = baseUrl + "fcmtokenrefresh";
   static const String registerResident = baseUrl + "registerresident";
@@ -29,6 +34,7 @@ class Api {
   static const String updateNotice = baseUrl + "updatenotice";
   static const String reportedResidents = baseUrl + "reportedresidents";
   static const String reports = baseUrl + "reports";
+  static const String getAllReports = baseUrl + "get-all-reports";
   static const String pendingReports = baseUrl + "pendingreports";
   static const String updateReportStatus = baseUrl + "updatereportstatus";
   static const String historyReportedResidents =
@@ -53,6 +59,7 @@ class Api {
   static const String emergencyCount = baseUrl + "emergencycount";
   static const String verifyResident = baseUrl + "verifyresident";
   static const String societyBuildings = baseUrl + "societybuildings";
+  static const String getAllAdmins = baseUrl + "viewsubadmin";
   static const String addSocietyBuilding = baseUrl + "addsocietybuilding";
   static const String viewSocietyBuildingFloors =
       baseUrl + "viewsocietybuildingfloors";
@@ -63,6 +70,8 @@ class Api {
   static const String addSocietyBuildingApartments =
       baseUrl + "addsocietybuildingapartments";
   static const String addMeasurement = baseUrl + "addmeasurement";
+  static const String addFloorsUpdated = baseUrl + "addsocietybuildingfloors";
+  static const String updateMeasurment = baseUrl + "updatemeasurement";
   static const String housesApartmentMeasurements =
       baseUrl + "housesapartmentmeasurements";
   static const String viewAllSocieties =
@@ -102,6 +111,9 @@ class Api {
       baseUrl + "verifylocalbuildingapartmentresident";
   static const String unverifiedLocalBuildingApartmentResident =
       baseUrl + "unverifiedlocalbuildingapartmentresident";
+
+  static const String rejectVerification = baseUrl + "reject-verification";
+
   static const String viewEmergency = baseUrl + "viewEmergency";
   static const String pendingReportsCount = baseUrl + "pendingreportscount";
   static const String unVerifiedResidentCount =
@@ -125,6 +137,39 @@ class Api {
   static const String createParking = baseUrl + "parkings/create";
   static const String getParkingSlots = baseUrl + "parking-lots";
   static const String assignParking = baseUrl + "assign-parking";
-
   static const String getVisitorsLogs = baseUrl + "society-visitors";
+  static const String updateParking = baseUrl + "update-parking";
+  static const String makeModerator = baseUrl + "make-moderators";
+  static const String blockedResidents = baseUrl + "blocked-residents";
+  static const String unblockResidents = baseUrl + "unblock-resident";
+
+  static const String residentDetails = baseUrl + "resident-details";
+
+  static const String getAllLuggagePass = baseUrl + "all-laguage-pass";
+
+  static const String approvedLuggagePass = baseUrl + "approve-laguage-pass";
+  static const String deleteAccount = baseUrl + "delete-account";
+  static const String addShortTermRental = baseUrl + "short-term-booking";
+  static const String getSocietyBuildings = baseUrl + "get-society-buildings";
+
+  static const String getBuildingsFloor =
+      baseUrl + "get-society-building-floors";
+
+  static const String getAllFoors = baseUrl + "get-floors";
+
+  static const String getBuildingApartments =
+      baseUrl + "get-society-building-appartments";
+  static const String getAllShortTermRental = baseUrl + "short-term-booking";
+  static const String rentSettlement = baseUrl + "add-rent-settlement";
+
+  // ===============  DOMESTIC HELPER
+  static const String registerDomesticHelper = baseUrl + "register-worker";
+  static const String getAllWorkers = baseUrl + "all-workers";
+  static const String updateDomesticHelper = baseUrl + "update-worker";
+  static const String deleteDomesticHelper = baseUrl + "delete-worker";
+  static const String domesticHelperProfile = baseUrl + "worker-profile";
+  static const String allBookings = baseUrl + "all-booking";
+
+  static const String getAllTickets = baseUrl + "get-all-tickets";
+  static const String updateTickets = baseUrl + "owner-tickets/update";
 }

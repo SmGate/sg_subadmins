@@ -33,7 +33,6 @@ class BlocksController extends GetxController {
   int phaseid = 0;
   @override
   void onInit() {
-  
     super.onInit();
 
     // pid=data[0];
@@ -69,6 +68,7 @@ class BlocksController extends GetxController {
           Api.blocks + "/" + dynamicid.toString() + "/" + type.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
     );
@@ -82,4 +82,7 @@ class BlocksController extends GetxController {
 
     return Blocks.fromJson(data);
   }
+
+
+  
 }

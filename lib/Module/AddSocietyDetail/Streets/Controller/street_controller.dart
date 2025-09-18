@@ -7,7 +7,6 @@ import 'package:societyadminapp/Services/Shared%20Preferences/MySharedPreference
 import '../../../../utils/Constants/api_routes.dart';
 import '../../../../Model/User.dart';
 
-
 class StreetsController extends GetxController {
   var data = Get.arguments;
   // int? bid ;
@@ -37,7 +36,6 @@ class StreetsController extends GetxController {
 
   @override
   void onInit() async {
-   
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       super.onInit();
 
@@ -88,6 +86,7 @@ class StreetsController extends GetxController {
           Api.streets + "/" + dynamicid.toString() + "/" + type.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $bearerToken"
       },
     );

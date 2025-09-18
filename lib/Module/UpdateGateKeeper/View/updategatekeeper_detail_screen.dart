@@ -25,6 +25,8 @@ import '../../../Widgets/my_textform_field.dart';
 import '../Controller/update_gate_keeper_controller.dart';
 
 class UpdateGateKepeerScreen extends GetView {
+
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<UpdateGateKeeperController>(

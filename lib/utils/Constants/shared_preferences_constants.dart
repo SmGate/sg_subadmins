@@ -15,6 +15,7 @@ const String bearerTokenSPKey = 'bearerToken';
 const String fcmtokenSPKey = 'fcmtoken';
 const String structuretypeSPKey = 'structuretype';
 const String societynameSPKey = 'name';
+const String societyPermissionKey = "permissions";
 
 //Society
 //

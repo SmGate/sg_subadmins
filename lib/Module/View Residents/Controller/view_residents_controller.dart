@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:societyadminapp/Module/View%20Residents/Model/all_residens_model.dart';
+import 'package:societyadminapp/Module/View%20Residents/service/all_resident_service.dart';
 import 'package:societyadminapp/Routes/set_routes.dart';
 import '../../../utils/Constants/api_routes.dart';
 import '../../../utils/Constants/constants.dart';
@@ -13,61 +16,60 @@ import '../Model/Resident.dart';
 class ViewResidentController extends GetxController {
   var user = Get.arguments;
 
-  late final User userdata;
+  User userdata = User();
   var residentid = 0.obs;
   var token = "".obs;
+  var pageSize = 10;
+  RxString error = "".obs;
+  List<Datum> residentRecordList = [];
+  var allResidentModel = AllResidentModel();
+
+  final PagingController<int, Datum> pagingController =
+      PagingController(firstPageKey: 1);
   @override
   void onInit() {
     super.onInit();
     print("init");
     userdata = this.user;
+
+    pagingController.addPageRequestListener((pageKey) {
+      viewResidentsApi(
+          pageKey: pageKey,
+          limit: pageSize,
+          subAdminId: userdata.structureType == 6
+              ? userdata.userid.toString()
+              : userdata.societyid.toString());
+    });
   }
 
-  viewResidentsApi(int subAdminId, String token) async {
-    print(subAdminId.toString());
-    print(token);
+  viewResidentsApi({
+    String? subAdminId,
+    int? pageKey,
+    int? limit,
+  }) async {
+    print("this method call");
+    error.value = "";
 
-    final response = await Http.get(
-      Uri.parse(Api.viewResidents + "/" + subAdminId.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
+    var res = await AllResidentSerVice.getAllResidentList(
+      subadminId: subAdminId,
+      pageKey: pageKey,
+      limit: limit,
     );
-    var data = jsonDecode(response.body.toString());
 
-    if (response.statusCode == 200) {
-      print(data);
-// Residents.fromJson(data);
-      final List<Resident> li = await (data['data'] as List)
-          .map(
-            (e) => Resident(
-                firstname: e['firstname'],
-                image: e['image'],
-                password: e['password'],
-                id: e['id'],
-                address: e['address'],
-                committeemember: e["committeemember"],
-                cnic: e['cnic'],
-                lastname: e['lastname'],
-                mobileno: e['mobileno'],
-                owneraddress: e['owneraddress'],
-                ownermobileno: e['ownermobileno'],
-                ownername: e['ownername'],
-                //
-                propertytype: e['propertytype'],
-                residentid: e['residentid'],
-                residenttype: e['residenttype'],
-                roleid: e['roleid'],
-                rolename: e['rolename'],
-                subadminid: e['subadminid'],
-                vechileno: e['vechileno'],
-                created_at: e['created_at'],
-                updated_at: e['updated_at']),
-          )
-          .toList();
+    if (res is AllResidentModel) {
+      allResidentModel = res;
+      residentRecordList = allResidentModel.data?.data ?? [];
 
-      return li;
+      final isLastPage = residentRecordList.length < pageSize;
+      if (isLastPage) {
+        pagingController.appendLastPage(residentRecordList);
+      } else {
+        final nextPageKey = pageKey! + 1;
+        pagingController.appendPage(residentRecordList, nextPageKey);
+      }
+    } else {
+      error.value = res.toString();
+      Get.snackbar("Error", error.value);
     }
   }
 
@@ -85,6 +87,7 @@ class ViewResidentController extends GetxController {
           query.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );
@@ -133,6 +136,7 @@ class ViewResidentController extends GetxController {
       Uri.parse(Api.deleteResident + "/" + residentid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

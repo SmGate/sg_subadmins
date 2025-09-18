@@ -34,14 +34,13 @@ class UpdateFinanceManagerDetailController extends GetxController {
 
   @override
   void onInit() {
-  
     super.onInit();
     user = arguments[0];
     financeManager = arguments[1];
-    firstNameController.text = financeManager.firstname!;
-    lastNameController.text = financeManager.lastname!;
-    mobileNoController.text = financeManager.mobileno!;
-    addressController.text = financeManager.address!;
+    firstNameController.text = financeManager.firstname ?? "";
+    lastNameController.text = financeManager.lastname ?? "";
+    mobileNoController.text = financeManager.mobileno ?? "";
+    addressController.text = financeManager.address ?? "";
   }
 
   getFromGallery(ImageSource source) async {

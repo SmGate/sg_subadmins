@@ -25,6 +25,7 @@ class VisitoreDetailsScreenController extends GetxController {
       Uri.parse(Api.getVisitorDetails + "/" + subAdminId.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

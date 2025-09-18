@@ -31,7 +31,6 @@ class AddFinanceManagerController extends GetxController {
   late final User user;
   @override
   void onInit() {
-  
     super.onInit();
     user = arguments;
   }
@@ -100,7 +99,7 @@ class AddFinanceManagerController extends GetxController {
     request.fields['firstname'] = firstName;
     request.fields['lastname'] = lastName;
     request.fields['cnic'] = cnic;
-    request.fields['address'] = address;
+    request.fields['email'] = address;
     request.fields['mobileno'] = mobileNo;
     request.fields['roleid'] = 6.toString();
     request.fields['rolename'] = 'financemanager';

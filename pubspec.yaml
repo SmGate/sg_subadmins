@@ -15,10 +15,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+4
+version: 2.0.0+13
 
 environment:
-  sdk: ">=2.17.0 <3.3.10"
+  sdk: ">=2.17.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -27,56 +27,44 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  app_settings: ^5.0.0
+  awesome_dialog: ^2.2.1
+  badges: ^3.0.2
+  cached_network_image: ^3.2.3
+  connectivity_plus: ^3.0.0
+  csc_picker: ^0.2.6
+  cupertino_icons: ^1.0.2
+  dio: ^4.0.6
+  dropdown_search: ^5.0.5
+  firebase_core: ^2.6.1
+  firebase_core_platform_interface: ^4.5.1
+  firebase_messaging: ^14.2.4
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  get: ^4.6.5
-  image_picker: ^0.8.5+3
-  hexcolor: ^2.0.7
-  awesome_dialog: ^2.2.1
-  #infinite_scroll_pagination: ^3.2.0
-  #  flutter_staggered_grid_view: ^0.6.2
-  shared_preferences: ^2.0.15
-  firebase_core: ^2.6.1
-  firebase_messaging: ^14.2.4
-  google_fonts: ^4.0.4
-  flutter_svg: ^2.0.7
-  dropdown_search: ^5.0.5
-  dio: ^4.0.6
-  csc_picker: ^0.2.6
-  intl: ^0.17.0
-  firebase_core_platform_interface: ^4.5.1
-  flutter_screenutil: ^5.8.2
-  app_settings: ^5.0.0
-  cached_network_image: ^3.2.3
-  url_launcher: ^6.1.14
-  flutter_notification_channel: ^2.0.0
   flutter_local_notifications: ^16.1.0
+  flutter_notification_channel: ^2.0.0
+  flutter_rating_bar: ^4.0.1
+  flutter_screenutil: ^5.8.2
+  flutter_svg: ^2.0.7
   fluttertoast: ^8.2.2
-  badges: ^3.0.2
-  readmore: ^3.0.0
+  get: ^4.6.5
+  google_fonts: ^4.0.4
+  hexcolor: ^3.0.1
+  image_picker: ^0.8.5+3
+  infinite_scroll_pagination: ^4.0.0
+  intl: ^0.19.0
   loading_animation_widget: ^1.2.1
+  readmore: ^3.0.0
   searchfield: ^1.0.9
-
-
+  shared_preferences: ^2.0.15
+  shimmer: ^3.0.0
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  #flutter_lints: ^2.0.0
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -89,19 +77,12 @@ flutter:
     - assets/icons/new_icons/
     - assets/icons/svg/
     - assets/icons/
-   
-
-
-
-
-    
-
+    - assets/sounds/emergency.wav
+    - assets/sounds/notisound.wav
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

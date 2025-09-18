@@ -22,7 +22,6 @@ class SocietyBuildingController extends GetxController {
 
   @override
   void onInit() {
-    
     super.onInit();
     user = data;
 
@@ -33,27 +32,9 @@ class SocietyBuildingController extends GetxController {
     } else {
       type = 'phase society building';
     }
-
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    //   super.onInit();
-
-    //   user = await MySharedPreferences.getUserData();
-
-    //   if (user.structureType == 1) {
-    //     user = data;
-
-    //   } else {
-    //     user = data[0];
-    //     blockid = data[1];
-    //     print('dataaaaa');
-    //     print(blockid);
-    //   }
-
-    //   update();
-    // });
   }
 
-  Future<SocietyBuilding> SocietyBuildingApi(
+  Future<SocietyBuilding> societyBuildingApi(
       {required int dynamicid, required String token}) async {
     print("${dynamicid.toString()}");
     print(token);
@@ -66,6 +47,7 @@ class SocietyBuildingController extends GetxController {
           type.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
     );

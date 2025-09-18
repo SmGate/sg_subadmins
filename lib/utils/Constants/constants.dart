@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 
-final Color primaryColor = HexColor("#FF9900");
+final Color primaryColor = AppColors.appThem;
 const String assetsBaseUrl = "assets/";
 
 Future<String> getDate(BuildContext context) async {
@@ -24,7 +24,7 @@ Future<String> getDate(BuildContext context) async {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: primaryColor, // button text color
+                backgroundColor: primaryColor, // button text color
               ),
             ),
           ),
@@ -136,7 +136,7 @@ String? cnicValidator(String? v) {
 }
 
 String laravelDateToFormattedDate(String laravelDate) {
-  DateTime date = DateTime.parse(laravelDate);
+  DateTime date = DateTime.parse(laravelDate).toLocal();
 
   String formattedDate = DateFormat('d MMM y').format(date);
 
@@ -144,25 +144,25 @@ String laravelDateToFormattedDate(String laravelDate) {
 }
 
 String convertLaravelDateFormatToDayMonthYearDateFormat(String inputDate) {
-  DateTime dateTime = DateTime.parse(inputDate);
+  DateTime dateTime = DateTime.parse(inputDate).toLocal();
   String formattedDate = DateFormat('d MMM y').format(dateTime);
   return formattedDate;
 }
 
 String convertDateFormatToDayMonthYearDateFormat(String inputDate) {
-  DateTime parsedDate = DateTime.parse(inputDate);
+  DateTime parsedDate = DateTime.parse(inputDate).toLocal();
   String formattedDate = DateFormat("MMM, d, yyyy").format(parsedDate);
   return formattedDate;
 }
 
 String convertUtcToFormattedTime(String utcTimestamp) {
-  DateTime dateTime = DateTime.parse(utcTimestamp);
+  DateTime dateTime = DateTime.parse(utcTimestamp).toLocal();
   String formattedTime = DateFormat.jm().format(dateTime);
   return formattedTime;
 }
 
 String convertUtcToFormattedTimeAdd5Hours(String utcTimestamp) {
-  DateTime dateTime = DateTime.parse(utcTimestamp);
+  DateTime dateTime = DateTime.parse(utcTimestamp).toLocal();
 
   // Add 5 hours to the DateTime
   dateTime = dateTime.add(Duration(hours: 5));
@@ -172,7 +172,7 @@ String convertUtcToFormattedTimeAdd5Hours(String utcTimestamp) {
 }
 
 String convertUtcToDayOfWeekWithOffset(String utcTimestamp) {
-  DateTime dateTime = DateTime.parse(utcTimestamp);
+  DateTime dateTime = DateTime.parse(utcTimestamp).toLocal();
 
   // Add 5 hours to the DateTime
   dateTime = dateTime.add(Duration(hours: 5));
@@ -201,7 +201,7 @@ Future<bool?> myToast(
 
 String formatTimeToAMPM(String time) {
 // Parse the input time string to create a DateTime object
-  DateTime parsedTime = DateFormat('HH:mm').parse(time);
+  DateTime parsedTime = DateFormat('HH:mm').parse(time, true).toLocal();
 
 // Format the DateTime object to include AM/PM
   String formattedTime = DateFormat('h:mm a').format(parsedTime);

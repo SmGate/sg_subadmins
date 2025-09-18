@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:image_picker/image_picker.dart';
+import 'package:societyadminapp/Routes/set_routes.dart';
 import 'package:societyadminapp/utils/Constants/api_routes.dart';
 import 'package:societyadminapp/utils/Constants/constants.dart';
 import '../../../Model/User.dart';
@@ -38,7 +39,7 @@ class AddEventScreenController extends GetxController {
     );
     print('time.$picked');
     var currentTime =
-        '${picked!.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+        '${picked?.hour.toString().padLeft(2, '0')}:${picked?.minute.toString().padLeft(2, '0')}';
 
     currentTime.toString();
 
@@ -94,68 +95,6 @@ class AddEventScreenController extends GetxController {
     update();
   }
 
-  // Future addEventApi({
-  //   required int userid,
-  //   required String token,
-  //   required String eventTitle,
-  //   required String eventDescription,
-  //   required String eventStartDate,
-  //   required String eventEndDate,
-  //   required String startTime,
-  //   required String endTime,
-  // }) async {
-  //   print(userid);
-  //   print(token);
-
-  //   isLoading = true;
-  //   update();
-
-  //   final response = await Http.post(
-  //     Uri.parse(Api.addEvent),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'Authorization': "Bearer $token"
-  //     },
-  //     body: jsonEncode(<String, dynamic>{
-  //       "userid": userid,
-  //       "title": eventTitle,
-  //       "description": eventDescription,
-  //       "startdate": eventStartDate,
-  //       "enddate": eventEndDate,
-  //       "starttime": startTime,
-  //       "endtime": endTime,
-  //       "active": "1",
-  //     }),
-  //   );
-  //   print(response.body);
-
-  //   if (response.statusCode == 200) {
-  //     isLoading = false;
-  //     update();
-  //     var data = jsonDecode(response.body);
-  //     print(data);
-  //     print(response.statusCode);
-
-  //     Get.offNamed(eventsscreen, arguments: user);
-
-  //     myToast(msg: 'Event Add Successfully');
-  //   } else if (response.statusCode == 403) {
-  //     isLoading = false;
-  //     update();
-  //     var data = jsonDecode(response.body.toString());
-
-  //     (data['errors'] as List)
-  //         .map((e) => myToast(
-  //               msg: e.toString(),
-  //             ))
-  //         .toList();
-  //   } else {
-  //     isLoading = false;
-  //     update();
-  //     myToast(msg: 'Failed to Add Event');
-  //   }
-  // }
-
 //////
 
   Future<void> addEvent({
@@ -202,7 +141,7 @@ class AddEventScreenController extends GetxController {
         startTimeController.clear();
         endTimeController.clear();
 
-        Get.back();
+        Get.offNamed(eventsscreen, arguments: user);
         print(data);
         print(response.body);
         myToast(msg: 'Event Added Successfully');
@@ -214,7 +153,7 @@ class AddEventScreenController extends GetxController {
       }
     } catch (e) {
       print('Error: $e');
-      myToast(msg: 'Failed to Register');
+      myToast(msg: e);
     } finally {
       isLoading = false;
       update();

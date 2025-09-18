@@ -130,45 +130,45 @@ class NoticeBoardScreen extends GetView {
                                                           ],
                                                         ),
                                                         20.ph,
-                                                        DetailShownDialogBox(
-                                                            icon:
-                                                                AppImages.date2,
-                                                            heading:
-                                                                'Start Dtae',
-                                                            isPng: true,
-                                                            text: snapshot
-                                                                .data![index]
-                                                                .startdate),
-                                                        DetailShownDialogBox(
-                                                            icon:
-                                                                AppImages.date2,
-                                                            heading: 'End Date',
-                                                            isPng: true,
-                                                            text: snapshot
-                                                                .data![index]
-                                                                .enddate
-                                                                .toString()),
+                                                        // DetailShownDialogBox(
+                                                        //     icon:
+                                                        //         AppImages.date2,
+                                                        //     heading:
+                                                        //         'Start Dtae',
+                                                        //     isPng: true,
+                                                        //     text: snapshot
+                                                        //         .data![index]
+                                                        //         .startdate),
+                                                        // DetailShownDialogBox(
+                                                        //     icon:
+                                                        //         AppImages.date2,
+                                                        //     heading: 'End Date',
+                                                        //     isPng: true,
+                                                        //     text: snapshot
+                                                        //         .data![index]
+                                                        //         .enddate
+                                                        //         .toString()),
                                                         DetailShownDialogBox(
                                                             icon: AppImages
                                                                 .timeIcon,
                                                             heading:
-                                                                'Start Time',
+                                                                'Notice Time',
                                                             text: Hour12formatTime(
                                                                 snapshot
                                                                     .data![
                                                                         index]
                                                                     .starttime
                                                                     .toString())),
-                                                        DetailShownDialogBox(
-                                                            icon: AppImages
-                                                                .timeIcon,
-                                                            heading: 'End Time',
-                                                            text: Hour12formatTime(
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .endtime
-                                                                    .toString())),
+                                                        // DetailShownDialogBox(
+                                                        //     icon: AppImages
+                                                        //         .timeIcon,
+                                                        //     heading: 'End Time',
+                                                        //     text: Hour12formatTime(
+                                                        //         snapshot
+                                                        //             .data![
+                                                        //                 index]
+                                                        //             .endtime
+                                                        //             .toString())),
                                                         MyButton(
                                                           width:
                                                               double.infinity,
@@ -194,7 +194,9 @@ class NoticeBoardScreen extends GetView {
                                             .data![index].noticedetail
                                             .toString(),
                                         showButtons: false,
-                                        showeventCardDesginImg: false,
+                                        eventCardDesginImg:
+                                            AppImages.eventCardLeft,
+                                        showeventCardDesginImg: true,
                                         DeleteDialogPress: () {
                                           controller.currentNoticeBoardId =
                                               snapshot.data![index].id;
@@ -219,6 +221,9 @@ class NoticeBoardScreen extends GetView {
                                           HexColor("#F2F2F2"),
                                           HexColor("#F2F2F2")
                                         ],
+                                        startTIme: snapshot
+                                            .data![index].starttime
+                                            .toString(),
                                         iconColor: AppColors.globalWhite,
                                         startDatecolor: AppColors.globalWhite,
                                         endDatecolor: AppColors.globalWhite,
@@ -245,6 +250,9 @@ class NoticeBoardScreen extends GetView {
                                 child: CircularIndicatorUnderWhiteBox());
                           }
                         }),
+                  ),
+                  SizedBox(
+                    height: 20,
                   ),
                 ],
               )),

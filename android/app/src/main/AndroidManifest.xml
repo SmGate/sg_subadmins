@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.malikwaqas.smartgatesocietyadmin">
    <application
-        android:label="Sub Admin"
+        android:label="SG Manager"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

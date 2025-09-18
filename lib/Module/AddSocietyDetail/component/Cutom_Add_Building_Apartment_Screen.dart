@@ -59,7 +59,7 @@ class AddBuildingApartmentCustom extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MyText(name: 'From Apartment'),
+                                MyText(name: 'From'),
                                 10.ph,
                                 SizedBox(
                                   width: 70.w,
@@ -70,6 +70,7 @@ class AddBuildingApartmentCustom extends StatelessWidget {
                                     enabled: true,
                                     decoration: InputDecoration(
                                         filled: true,
+                                        fillColor: AppColors.greyTransparent,
                                         errorBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.r),
@@ -84,7 +85,7 @@ class AddBuildingApartmentCustom extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MyText(name: 'To Apartment'),
+                                MyText(name: 'To '),
                                 10.ph,
                                 SizedBox(
                                   width: 70.w,
@@ -95,6 +96,7 @@ class AddBuildingApartmentCustom extends StatelessWidget {
                                     enabled: true,
                                     decoration: InputDecoration(
                                         filled: true,
+                                        fillColor: AppColors.greyTransparent,
                                         errorBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.r),

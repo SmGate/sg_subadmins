@@ -1,14 +1,16 @@
 // ignore_for_file: must_be_immutable, deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:societyadminapp/utils/Constants/api_routes.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/my_button.dart';
 import 'package:societyadminapp/utils/Constants/app_images.dart';
+import 'package:societyadminapp/utils/helpers/date_helpers.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import 'package:societyadminapp/utils/style/text_style.dart';
 
@@ -21,17 +23,21 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
       this.showeventCardDesginImg = true,
       required this.title,
       required this.description,
-      this.showButtons = true, // Add a flag for showing buttons
+      this.showButtons = true,
       this.onPressedofAddImage,
       this.onPressedofViewImage,
       required this.DeleteDialogPress,
       required this.updateOnPressed,
       required this.startdate,
       required this.enddate,
+      this.startTIme,
+      this.endTime,
       this.gradientColors = const [],
       this.iconColor,
       this.startDatecolor,
-      this.endDatecolor});
+      this.image,
+      this.endDatecolor,
+      this.isShowEvent = false});
   String? eventCardDesginImg;
 
   String? title;
@@ -46,9 +52,13 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
   void Function()? updateOnPressed;
   String? startdate;
   String? enddate;
+  String? image;
+  String? startTIme;
+  String? endTime;
   Color? iconColor;
   Color? startDatecolor;
   Color? endDatecolor;
+  bool isShowEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +68,7 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
       margin: EdgeInsets.only(
         left: 12.w,
         right: 12.w,
-        top: 12.h,
+        top: 14.h,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18.r),
@@ -76,50 +86,84 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
         ],
         color: HexColor('#FFFFFF'),
       ),
-      child: Stack(
-        children: [
-          if (showeventCardDesginImg)
-            Align(
-                alignment: Alignment.centerRight,
-                child: SvgPicture.asset(
-                  eventCardDesginImg!,
-                  color: AppColors.appThem,
-                )),
-          //TITLE
-          Padding(
-            padding: EdgeInsets.only(left: 21.w, top: 12.h),
-            child: Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: reusableTextStyle(
-                  textStyle: GoogleFonts.dmSans(),
-                  fontSize: 16.0,
-                  color: AppColors.boldHeading,
-                  fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 20,
             ),
-          ),
-          //DESCRIPTION
-          Padding(
-            padding: EdgeInsets.only(left: 21.w, top: 39.w),
-            child: Text(
-              description!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: reusableTextStyle(
-                  textStyle: GoogleFonts.dmSans(),
-                  fontSize: 12.0,
-                  color: AppColors.dark,
-                  fontWeight: FontWeight.normal),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 230,
+                      child: Text(
+                        title ?? "NA",
+                        maxLines: 2,
+                        style: reusableTextStyle(
+                            textStyle: GoogleFonts.dmSans(),
+                            fontSize: 16.0,
+                            color: AppColors.boldHeading,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    //DESCRIPTION
+                    SizedBox(
+                      width: 230,
+                      child: Text(
+                        description ?? "NA",
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: reusableTextStyle(
+                            textStyle: GoogleFonts.dmSans(),
+                            fontSize: 12.0,
+                            color: AppColors.dark,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                  ],
+                ),
+                isShowEvent
+                    ? Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: CachedNetworkImage(
+                            imageUrl: "${Api.imageBaseUrl}${image}",
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.appThem,
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox()
+              ],
             ),
-          ),
-
-          //Add And View Image Buttons
-          // Conditionally show buttons
-          Padding(
-            padding:
-                EdgeInsets.only(left: (showButtons) ? 18.w : 250, top: 65.h),
-            child: Row(
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 if (showButtons) ...[
                   MyButton(
@@ -150,8 +194,8 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
                 ],
                 Spacer(),
                 Container(
-                  height: 25.h,
-                  width: 25.w,
+                  height: 35,
+                  width: 35,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.r),
                       color: AppColors.appThem),
@@ -186,8 +230,8 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
                 ),
                 6.pw,
                 Container(
-                  height: 25.h,
-                  width: 25.w,
+                  height: 35,
+                  width: 35,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.r),
                       color: AppColors.appThem),
@@ -199,61 +243,80 @@ class EventnNoticeBoardViewCard extends StatelessWidget {
                     onPressed: updateOnPressed,
                   ),
                 ),
-                20.pw,
               ],
             ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.only(
-              left: 21.w,
-              right: 20.w,
-              top: 95.h,
-              bottom: 8.h,
+            SizedBox(
+              height: 10,
             ),
-            child: Container(
-              width: 286.w,
-              height: 34.h,
+            Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7.r),
                   color: AppColors.appThem),
               child: Padding(
-                padding: EdgeInsets.only(
-                  left: 14.w,
-                ),
-                child: Row(
+                padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.calendar_month_rounded,
-                      size: ScreenUtil().setWidth(20),
-                      color: iconColor ?? HexColor('#FFFFFF'),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month_rounded,
+                          size: ScreenUtil().setWidth(20),
+                          color: iconColor ?? HexColor('#FFFFFF'),
+                        ),
+                        14.pw,
+                        Text(startdate ?? "NA",
+                            style: GoogleFonts.ubuntu(
+                              color: startDatecolor ?? HexColor('#FFFFFF'),
+                              fontStyle: FontStyle.normal,
+                              letterSpacing: 0.0015,
+                              fontSize: ScreenUtil().setSp(14),
+                            )),
+                        27.pw,
+                        Text(enddate ?? "NA",
+                            style: GoogleFonts.ubuntu(
+                              color: endDatecolor ?? HexColor('#FFFFFF'),
+                              fontStyle: FontStyle.normal,
+                              letterSpacing: 0.0015,
+                              fontSize: ScreenUtil().setSp(14),
+                            )),
+                      ],
                     ),
-                    14.pw,
-                    Text(startdate!,
-                        style: GoogleFonts.ubuntu(
-                          color: startDatecolor ?? HexColor('#FFFFFF'),
-                          fontStyle: FontStyle.normal,
-                          letterSpacing: 0.0015,
-                          fontSize: ScreenUtil().setSp(14),
-                        )),
-                    26.pw,
-                    SvgPicture.asset(
-                      AppImages.arrowForward,
+                    SizedBox(
+                      height: 10,
                     ),
-                    27.pw,
-                    Text(enddate!,
-                        style: GoogleFonts.ubuntu(
-                          color: endDatecolor ?? HexColor('#FFFFFF'),
-                          fontStyle: FontStyle.normal,
-                          letterSpacing: 0.0015,
-                          fontSize: ScreenUtil().setSp(14),
-                        )),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.timer,
+                          size: ScreenUtil().setWidth(20),
+                          color: iconColor ?? HexColor('#FFFFFF'),
+                        ),
+                        14.pw,
+                        Text(formatTime(startTIme ?? "NA"),
+                            style: GoogleFonts.ubuntu(
+                              color: startDatecolor ?? HexColor('#FFFFFF'),
+                              fontStyle: FontStyle.normal,
+                              letterSpacing: 0.0015,
+                              fontSize: ScreenUtil().setSp(14),
+                            )),
+                        27.pw,
+                        Text(formatTime(endTime ?? ""),
+                            style: GoogleFonts.ubuntu(
+                              color: endDatecolor ?? HexColor('#FFFFFF'),
+                              fontStyle: FontStyle.normal,
+                              letterSpacing: 0.0015,
+                              fontSize: ScreenUtil().setSp(14),
+                            )),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
