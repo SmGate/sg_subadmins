@@ -18,6 +18,7 @@ class User {
   final int? structureType;
   final String? societyorbuildingname;
   Map<String, dynamic>? permissions;
+  final int? isMainAdmin;
 
   // final List<GateKeeper>? gatekeeperlist;
 
@@ -40,7 +41,8 @@ class User {
       this.superadminid,
       this.created_at,
       this.updated_at,
-      this.permissions
+      this.permissions,
+      this.isMainAdmin
       // this.gatekeeperlist,
       });
 }

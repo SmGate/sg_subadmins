@@ -18,6 +18,15 @@ class MenuSection extends StatelessWidget {
 
     // List of all menu items with associated permissions
     final List<Map<String, dynamic>> allItems = [
+
+      {
+        'permission': (controller.user.isMainAdmin ?? 0) == 1,
+        'widget': MenuItems(
+          image: AppImages.person,
+          title: "Managers",
+          ontap: () => Get.offNamed(subadminList, arguments: controller.user),
+        ),
+      },
       {
         'permission': true,
         'widget': MenuItems(
@@ -58,8 +67,11 @@ class MenuSection extends StatelessWidget {
         'widget': MenuItems(
           image: AppImages.report,
           title: "Complaints",
-          ontap: () =>
-              Get.offNamed(viewreportscreen, arguments: controller.user),
+          ontap: () {
+            controller.inProgressReportCount = 0;
+            controller.update();
+            Get.offNamed(viewreportscreen, arguments: controller.user);
+          },
         ),
       },
       {
@@ -104,8 +116,11 @@ class MenuSection extends StatelessWidget {
         'widget': MenuItems(
           image: AppImages.residentVerification,
           title: "Resident\nVerification",
-          ontap: () =>
-              Get.offNamed(unverifiedresident, arguments: controller.user),
+          ontap: () {
+            controller.unVerifiedUserCount = 0;
+            controller.update();
+            Get.offNamed(unverifiedresident, arguments: controller.user);
+          },
         ),
       },
       {
@@ -123,8 +138,12 @@ class MenuSection extends StatelessWidget {
         'widget': MenuItems(
           image: AppImages.panicButton,
           title: "Residential\nEmergency",
-          ontap: () => Get.offNamed(residentialEmergencyScreen,
-              arguments: controller.user),
+          ontap: () {
+            controller.emergencyCount = 0;
+            controller.update();
+            Get.offNamed(residentialEmergencyScreen,
+                arguments: controller.user);
+          },
         ),
       },
       {
@@ -161,6 +180,7 @@ class MenuSection extends StatelessWidget {
               Get.offNamed(assignedParking, arguments: controller.user),
         ),
       },
+      
       {
         'permission': permissions?['domestic_help'],
         'widget': MenuItems(

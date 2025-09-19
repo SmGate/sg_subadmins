@@ -116,3 +116,7 @@ const String shortTermRental = '/shortTermRental';
 const String allShortTermRental = '/allShortTermRental';
 const String rentSettlement = '/rentSettlement';
 const String supportTicket = '/supportTicket';
+const String addSubadmin = '/add-subadmin';
+const String subadminList = '/subadmin-list';
+const String updateSubadmin = '/update-subadmin';
+const String updateSubadminBuilding = '/update-subadmin-building';

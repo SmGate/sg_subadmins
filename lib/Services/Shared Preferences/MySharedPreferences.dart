@@ -26,6 +26,7 @@ class MySharedPreferences {
       value.setInt(roleIdSPKey, user.roleId ?? 0);
       value.setInt(societyidSPKey, user.societyid ?? 0);
       value.setInt(superadminidSPKey, user.superadminid ?? 0);
+      value.setInt(isMainAdminSPKey, user.isMainAdmin ?? 0);
       if (user.permissions != null) {
         String permissionsJson = jsonEncode(user.permissions);
         value.setString(societyPermissionKey, permissionsJson);
@@ -77,6 +78,7 @@ class MySharedPreferences {
         mobileno: value.getString(mobileNoSPKey),
         societyid: value.getInt(societyidSPKey),
         superadminid: value.getInt(superadminidSPKey),
+        isMainAdmin: value.getInt(isMainAdminSPKey),
         permissions: permissions,
       );
     });
@@ -101,6 +103,7 @@ class MySharedPreferences {
       value.remove(societyidSPKey);
       value.remove(mobileNoSPKey);
       value.remove(imageSPKey);
+      value.remove(isMainAdminSPKey);
     });
   }
 

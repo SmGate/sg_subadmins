@@ -1,14 +1,14 @@
 class Api {
   ////live
-  static const String imageBaseUrl =
-      'https://www.mobile-api.smartgate.pk/storage/';
-  static const String baseUrl = 'https://www.mobile-api.smartgate.pk/api/';
+  // static const String imageBaseUrl =
+  //     'https://www.mobile-api.smartgate.pk/storage/';
+  // static const String baseUrl = 'https://www.mobile-api.smartgate.pk/api/';
 
   ////local
 
-  // static const String imageBaseUrl =
-  //     'https://www.stagging.smartgate.pk/storage/';
-  // static const String baseUrl = 'https://www.stagging.smartgate.pk/api/';
+  static const String imageBaseUrl =
+      'https://www.stagging.smartgate.pk/storage/';
+  static const String baseUrl = 'https://www.stagging.smartgate.pk/api/';
 
   ///.   ===========================================
   static const String login = baseUrl + "login";
@@ -60,6 +60,7 @@ class Api {
   static const String verifyResident = baseUrl + "verifyresident";
   static const String societyBuildings = baseUrl + "societybuildings";
   static const String getAllAdmins = baseUrl + "viewsubadmin";
+  static const String addSubadmin = baseUrl + "addsubadmin";
   static const String addSocietyBuilding = baseUrl + "addsocietybuilding";
   static const String viewSocietyBuildingFloors =
       baseUrl + "viewsocietybuildingfloors";
@@ -151,6 +152,7 @@ class Api {
   static const String deleteAccount = baseUrl + "delete-account";
   static const String addShortTermRental = baseUrl + "short-term-booking";
   static const String getSocietyBuildings = baseUrl + "get-society-buildings";
+  static const String getBuildings = baseUrl + "get-buildings";
 
   static const String getBuildingsFloor =
       baseUrl + "get-society-building-floors";

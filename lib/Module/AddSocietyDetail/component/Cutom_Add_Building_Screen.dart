@@ -148,6 +148,19 @@ class AddBuildingCustomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build index-based dropdown to show all items even if some IDs are null/duplicate.
+    final List<SubAdminData> list = subAdmins ?? const <SubAdminData>[];
+    int? selectedIndex;
+    if (selectedSubAdminId != null) {
+      for (int i = 0; i < list.length; i++) {
+        final int? sid = list[i].subadminid ?? list[i].id;
+        if (sid != null && sid == selectedSubAdminId) {
+          selectedIndex = i;
+          break;
+        }
+      }
+    }
+
     return Form(
       key: fKey,
       child: ListView(
@@ -237,7 +250,7 @@ class AddBuildingCustomScreen extends StatelessWidget {
                                   color: AppColors.appThem,
                                 ))
                               : DropdownButtonFormField<int>(
-                                  value: selectedSubAdminId,
+                                  value: selectedIndex,
                                   isExpanded: true,
                                   decoration: InputDecoration(
                                     filled: true,
@@ -251,9 +264,10 @@ class AddBuildingCustomScreen extends StatelessWidget {
                                     ),
                                   ),
                                   hint: const Text('Assign Subadmin'),
-                                  items: subAdmins!.map((s) {
-                                    final id = s.subadminid ?? s.id;
-                                    final title = (s.name?.trim().isNotEmpty ==
+                                  items: List.generate(list.length, (index) {
+                                    final s = list[index];
+                                    final int? id = s.subadminid ?? s.id;
+                                    final String title = (s.name?.trim().isNotEmpty ==
                                             true)
                                         ? s.name!.trim()
                                         : [s.firstname, s.lastname]
@@ -262,7 +276,7 @@ class AddBuildingCustomScreen extends StatelessWidget {
                                             .join(' ')
                                             .trim();
                                     return DropdownMenuItem<int>(
-                                      value: id,
+                                      value: index,
                                       child: Text(
                                         title.isEmpty
                                             ? 'Unnamed (${id ?? '-'})'
@@ -270,8 +284,16 @@ class AddBuildingCustomScreen extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     );
-                                  }).toList(),
-                                  onChanged: onSelectSubAdmin,
+                                  }),
+                                  onChanged: (idx) {
+                                    if (idx == null) {
+                                      onSelectSubAdmin?.call(null);
+                                      return;
+                                    }
+                                    final s = list[idx];
+                                    final int? id = s.subadminid ?? s.id;
+                                    onSelectSubAdmin?.call(id);
+                                  },
                                 ),
                         ),
                       ),

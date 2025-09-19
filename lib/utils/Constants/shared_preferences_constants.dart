@@ -16,6 +16,7 @@ const String fcmtokenSPKey = 'fcmtoken';
 const String structuretypeSPKey = 'structuretype';
 const String societynameSPKey = 'name';
 const String societyPermissionKey = "permissions";
+const String isMainAdminSPKey = 'is_main_admin';
 
 //Society
 //

@@ -105,6 +105,11 @@ class LoginController extends GetxController {
           societyid: dataObj['societyid'],
           subadminid: dataObj['subadminid'],
           superadminid: dataObj['superadminid'],
+          isMainAdmin: (dataObj['is_main_admin'] is int)
+              ? dataObj['is_main_admin'] as int
+              : (dataObj['is_main_admin'] is bool)
+                  ? ((dataObj['is_main_admin'] as bool) ? 1 : 0)
+                  : int.tryParse('${dataObj['is_main_admin']}'),
           bearerToken: bearer,
           permissions: data['permissions'],
         );

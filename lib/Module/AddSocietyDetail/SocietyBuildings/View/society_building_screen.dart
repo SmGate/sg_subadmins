@@ -41,10 +41,10 @@ class SocietyBuildingScreen extends GetView {
             child: SafeArea(
               child: Scaffold(
                   backgroundColor: AppColors.background,
-                  floatingActionButton: MyFloatingButton(onPressed: () {
+                  floatingActionButton:controller.user.isMainAdmin == 1 ? MyFloatingButton(onPressed: () {
                     Get.offAndToNamed(addsocietybuildingscreen,
                         arguments: controller.user);
-                  }),
+                  }):SizedBox(),
                   body: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

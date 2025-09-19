@@ -129,6 +129,8 @@ class HomeScreen extends GetView {
                                             height: 25,
                                           ),
                                           onPressed: () {
+                                            controller.count = 0;
+                                            controller.update();
                                             Get.offNamed(
                                                 reportnotificationsscreen,
                                                 arguments: controller.user);
@@ -152,6 +154,8 @@ class HomeScreen extends GetView {
                                                 height: 25,
                                               ),
                                               onPressed: () {
+                                                controller.count = 0;
+                                                controller.update();
                                                 Get.offNamed(
                                                     reportnotificationsscreen,
                                                     arguments: controller.user);
