@@ -38,18 +38,15 @@ import 'package:societyadminapp/Module/luggage_pass/view/get_all_luggage_passess
 import 'package:societyadminapp/Module/parking%20managment/view/assigned_parking.dart';
 import 'package:societyadminapp/Module/parking%20managment/view/add-assign_parking.dart';
 import 'package:societyadminapp/Module/support_ticket/view/all_supports_tickets.dart';
+import 'package:societyadminapp/Module/Subadmin/View/subadmin_list_screen.dart';
+import 'package:societyadminapp/Module/Subadmin/View/add_subadmin_screen.dart';
+import 'package:societyadminapp/Module/Subadmin/View/update_subadmin_building_screen.dart';
+import 'package:societyadminapp/Module/Subadmin/View/update_subadmin_screen.dart';
 import 'package:societyadminapp/Module/visitors_details/view/visitore_details_screen.dart';
 import 'package:societyadminapp/Module/voting/view/generate_poll.dart';
 import 'package:societyadminapp/Module/voting/view/voting_screen.dart';
 import 'package:societyadminapp/Routes/screen_binding.dart';
 import 'package:societyadminapp/Routes/set_routes.dart';
-import 'package:societyadminapp/Module/Subadmin/View/add_subadmin_screen.dart';
-import 'package:societyadminapp/Module/Subadmin/View/subadmin_list_screen.dart';
-import 'package:societyadminapp/Module/Subadmin/View/update_subadmin_screen.dart';
-import 'package:societyadminapp/Module/Subadmin/View/update_subadmin_building_screen.dart';
-import 'package:societyadminapp/Module/Subadmin/Controller/subadmin_list_controller.dart';
-import 'package:societyadminapp/Model/User.dart';
-import 'package:get/get.dart';
 import '../Module/Add Event/View/add_event.dart';
 import '../Module/Add Event/View/update_event.dart';
 import '../Module/AddGateKepeer/View/add_gatekepeer.dart';
@@ -554,32 +551,27 @@ class RouteManagement {
           transition: Transition.noTransition),
 
       GetPage(
-          name: addSubadmin,
-          page: () => AddSubadminScreen(),
+          name: subadminList,
+          page: () => const SubadminListScreen(),
           binding: ScreenBindings(),
           transition: Transition.noTransition),
 
       GetPage(
-          name: subadminList,
-          page: () => SubadminListScreen(),
-          bindings: [
-            ScreenBindings(),
-            BindingsBuilder(() {
-              final args = Get.arguments;
-              if (args is User) {
-                Get.put(SubadminListController(user: args));
-              }
-            })
-          ],
+          name: addSubadmin,
+          page: () => const AddSubadminScreen(),
+          binding: ScreenBindings(),
+          transition: Transition.noTransition),
+
+      GetPage(
+          name: updateSubadminBuilding,
+          page: () => const UpdateSubadminBuildingScreen(),
+          binding: ScreenBindings(),
           transition: Transition.noTransition),
 
       GetPage(
           name: updateSubadmin,
           page: () => const UpdateSubadminScreen(),
-          transition: Transition.noTransition),
-      GetPage(
-          name: updateSubadminBuilding,
-          page: () => const UpdateSubadminBuildingScreen(),
+          binding: ScreenBindings(),
           transition: Transition.noTransition),
     ];
   }

@@ -5,10 +5,9 @@ import 'package:societyadminapp/Widgets/my_button.dart';
 import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
-import 'package:http/http.dart' as Http;
-import 'dart:convert';
-import 'package:societyadminapp/utils/Constants/api_routes.dart';
 import 'package:societyadminapp/Model/User.dart';
+import 'package:societyadminapp/Module/Subadmin/Controller/subadmin_list_controller.dart';
+import 'package:societyadminapp/Routes/set_routes.dart';
 
 class UpdateSubadminBuildingScreen extends StatefulWidget {
   const UpdateSubadminBuildingScreen({Key? key}) : super(key: key);
@@ -21,8 +20,6 @@ class UpdateSubadminBuildingScreen extends StatefulWidget {
 class _UpdateSubadminBuildingScreenState
     extends State<UpdateSubadminBuildingScreen> {
   int? selectedBuildingId;
-  List<Map<String, dynamic>> buildings = [];
-  bool loading = false;
   Map<String, dynamic>? _item;
   User? _user;
 
@@ -41,13 +38,32 @@ class _UpdateSubadminBuildingScreenState
   }
 
   Future<void> _startLoad() async {
-    setState(() => loading = true);
-    await _loadBuildings(_item, _user);
-    if (selectedBuildingId == null && buildings.isNotEmpty) {
-      final dynamic firstId = buildings.first['id'];
-      if (firstId is num) selectedBuildingId = firstId.toInt();
+    setState(() {
+      selectedBuildingId = null;
+    });
+    final int sid = _resolveSocietyId();
+    if (sid != 0) {
+      final SubadminListController c = Get.isRegistered<SubadminListController>()
+          ? Get.find<SubadminListController>()
+          : Get.put(SubadminListController(user: _user));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        c.fetchBuildingsForSociety(sid);
+      });
     }
-    setState(() => loading = false);
+  }
+
+  int _resolveSocietyId() {
+    int societyId = 0;
+    final dynamic candidate = _item?['societyid'] ??
+        _item?['society_id'] ??
+        (_item is Map<String, dynamic>
+            ? (_item!['society'] is Map
+                ? (_item!['society'] as Map)['id']
+                : null)
+            : null) ??
+        _user?.societyid;
+    if (candidate is num) societyId = candidate.toInt();
+    return societyId;
   }
 
   @override
@@ -77,57 +93,90 @@ class _UpdateSubadminBuildingScreenState
             12.0.ph,
 
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _SectionTitle('Select Building'),
-                    8.0.ph,
-                    loading
-                        ? const _DropdownSkeleton()
-                        : _SlimDropdown(
-                            value: selectedBuildingId,
-                            items: buildings
-                                .map((b) => DropdownMenuItem<int>(
-                                      value: (b['id'] as num).toInt(),
-                                      child: Text(
-                                        b['societybuildingname']?.toString() ??
-                                            'Building',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ))
-                                .toList(),
-                            onChanged: (v) => setState(() {
-                              selectedBuildingId = v;
-                            }),
-                          ),
-                    18.0.ph,
-                    _HintTile(
-                      icon: Icons.info_outline_rounded,
-                      text:
-                          'Only buildings from the selected society are listed. Tap Save to apply.',
-                    ),
-                    26.0.ph,
-
-                    // ✅ Centered Save button with a nice max width
-                    Align(
-                      alignment: Alignment.center,
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 280),
-                        child: MyButton(
-                          gradient: AppGradients.buttonGradient,
-                          onPressed: selectedBuildingId == null
-                              ? null
-                              : () => Get.back(),
-                          name: 'Save',
+              child: GetBuilder<SubadminListController>(
+                builder: (c) {
+                  final List<Map<String, dynamic>> buildings = c.buildings;
+                  final bool loading = c.isBuildingsLoading;
+                  // Preselect if not selected yet and item has assignment
+                  if (selectedBuildingId == null && buildings.isNotEmpty) {
+                    final dynamic currentBuildingId = _item?['societybuildingid'] ?? _item?['buildingid'];
+                    if (currentBuildingId is num) {
+                      final int id = currentBuildingId.toInt();
+                      final bool exists = buildings.any((b) => (b['id'] as num?)?.toInt() == id);
+                      if (exists) {
+                        selectedBuildingId = id;
+                      }
+                    }
+                  }
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _SectionTitle('Select Building'),
+                        8.0.ph,
+                        loading
+                            ? const _DropdownSkeleton()
+                            : _SlimDropdown(
+                                value: selectedBuildingId,
+                                items: buildings
+                                    .map((b) => DropdownMenuItem<int>(
+                                          value: (b['id'] as num).toInt(),
+                                          child: Text(
+                                            b['societybuildingname']?.toString() ?? 'Building',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ))
+                                    .toList(),
+                                onChanged: (v) => setState(() {
+                                  selectedBuildingId = v;
+                                  debugPrint('Selected buildingId: $v');
+                                }),
+                              ),
+                        18.0.ph,
+                        _HintTile(
+                          icon: Icons.info_outline_rounded,
+                          text: 'Only buildings from the selected society are listed. Tap Save to apply.',
                         ),
-                      ),
+                        26.0.ph,
+                        Align(
+                          alignment: Alignment.center,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 280),
+                            child: MyButton(
+                              gradient: AppGradients.buttonGradient,
+                              onPressed: () async {
+                                if (c.isSubmitting) return;
+                                if (selectedBuildingId == null) {
+                                  Get.snackbar('Validation', 'Building must be selected');
+                                  return;
+                                }
+                                final int? buildingId = selectedBuildingId;
+                                final int? subadminId = (_item?['subadminid'] as num?)?.toInt() ?? (_item?['id'] as num?)?.toInt();
+                                if (buildingId == null || subadminId == null) {
+                                  Get.snackbar('Error', 'Missing required identifiers');
+                                  return;
+                                }
+                                final String? msg = await c.assignBuildingToSubadmin(
+                                  subadminId: subadminId,
+                                  buildingId: buildingId,
+                                );
+                                if (msg != null) {
+                                  Get.snackbar('Success', msg);
+                                  // Go to Home and clear all routes
+                                  Get.offAllNamed(homescreen, arguments: _user ?? c.user);
+                                }
+                              },
+                              loading: c.isSubmitting,
+                              name: 'Save',
+                            ),
+                          ),
+                        ),
+                        14.0.ph,
+                      ],
                     ),
-
-                    14.0.ph,
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -136,29 +185,38 @@ class _UpdateSubadminBuildingScreenState
     );
   }
 
-  Future<List<Map<String, dynamic>>> _loadBuildings(
+  Future<void> _loadBuildings(
       Map<String, dynamic>? item, User? user) async {
-    if (buildings.isNotEmpty) return buildings;
     try {
-      final int societyId = (item?['societyid'] as num?)?.toInt() ?? 0;
-      final res = await Http.get(
-        Uri.parse('${Api.getBuildings}/$societyId'),
-        headers: <String, String>{
-          'Accept': 'application/json',
-          if (user?.bearerToken != null)
-            'Authorization': 'Bearer ${user!.bearerToken}',
-        },
-      );
-      if (res.statusCode == 200) {
-        final Map<String, dynamic> body = jsonDecode(res.body);
-        final List<dynamic> data = (body['data'] as List?) ?? <dynamic>[];
-        buildings = data
-            .map<Map<String, dynamic>>(
-                (e) => Map<String, dynamic>.from(e as Map))
-            .toList();
+      int societyId = 0;
+      final dynamic candidate = item?['societyid'] ??
+          item?['society_id'] ??
+          (item is Map<String, dynamic>
+              ? (item['society'] is Map
+                  ? (item['society'] as Map)['id']
+                  : null)
+              : null) ??
+          user?.societyid;
+      if (candidate is num) societyId = candidate.toInt();
+
+      if (societyId == 0) {
+        return;
+      }
+      final ctrl = Get.find<SubadminListController>();
+      await ctrl.fetchBuildingsForSociety(societyId);
+
+      // Preselect existing assignment if provided
+      final dynamic currentBuildingId = item?['societybuildingid'] ?? item?['buildingid'];
+      if (currentBuildingId is num) {
+        final int id = currentBuildingId.toInt();
+        final bool exists = ctrl.buildings.any((b) => (b['id'] as num?)?.toInt() == id);
+        if (exists) {
+          setState(() {
+            selectedBuildingId = id;
+          });
+        }
       }
     } catch (_) {}
-    return buildings;
   }
 }
 

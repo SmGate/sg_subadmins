@@ -163,6 +163,7 @@ class Api {
       baseUrl + "get-society-building-appartments";
   static const String getAllShortTermRental = baseUrl + "short-term-booking";
   static const String rentSettlement = baseUrl + "add-rent-settlement";
+  static const String assignBuilding = baseUrl + "assign-building";
 
   // ===============  DOMESTIC HELPER
   static const String registerDomesticHelper = baseUrl + "register-worker";
@@ -174,4 +175,5 @@ class Api {
 
   static const String getAllTickets = baseUrl + "get-all-tickets";
   static const String updateTickets = baseUrl + "owner-tickets/update";
+  static const String updateSubadmin = baseUrl + "updatesubadmin";
 }

@@ -150,11 +150,7 @@ class AddSocietyBuildingController extends GetxController {
     super.onClose();
   }
 
-  // Save selection from dropdown
-  void onSelectSubAdmin(int? id) {
-    selectedSubAdminId = id;
-    update();
-  }
+  // Dropdown selection handling removed (no subadmin assignment on add)
 
   Future<void> _loadSubAdmins({
     required int societyId,
@@ -195,7 +191,6 @@ class AddSocietyBuildingController extends GetxController {
 
   addSocietyBuildingApi({
     required String bearerToken,
-    required int subadminid,
     required int societyid,
     required int superadminid,
     required int dynamicid,
@@ -210,7 +205,10 @@ class AddSocietyBuildingController extends GetxController {
         Http.MultipartRequest('POST', Uri.parse(Api.addSocietyBuilding));
     request.headers.addAll(headers);
     request.fields['societybuildingname'] = BuildingName;
-    request.fields['subadminid'] = subadminid.toString();
+    // Send current user's userid as subadminid
+    if (user.userid != null) {
+      request.fields['subadminid'] = user.userid!.toString();
+    }
     request.fields['societyid'] = societyid.toString();
     request.fields['superadminid'] = superadminid.toString();
     request.fields['dynamicid'] = dynamicid.toString();

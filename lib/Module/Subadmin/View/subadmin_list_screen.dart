@@ -44,14 +44,13 @@ class SubadminListScreen extends GetView<SubadminListController> {
                   ),
                 ),
                 10.0.ph,
-
-                // Header summary card (optional but nice polish)
-                _HeaderSummary(count: c.subadmins.length, isLoading: c.isLoading),
-
+                _HeaderSummary(
+                    count: c.subadmins.length, isLoading: c.isLoading),
                 10.0.ph,
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: _SubadminList(
                       subadmins: c.subadmins,
                       isLoading: c.isLoading,
@@ -103,7 +102,8 @@ class _HeaderSummary extends StatelessWidget {
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.supervisor_account_rounded, color: Colors.white),
+            child: const Icon(Icons.supervisor_account_rounded,
+                color: Colors.white),
           ),
           12.0.pw,
           Expanded(
@@ -113,7 +113,12 @@ class _HeaderSummary extends StatelessWidget {
                 color: AppColors.globalWhite,
                 fontSize: 14.5,
                 fontWeight: FontWeight.w700,
-                shadows: const [Shadow(blurRadius: 2, color: Colors.black26, offset: Offset(0, 1))],
+                shadows: const [
+                  Shadow(
+                      blurRadius: 2,
+                      color: Colors.black26,
+                      offset: Offset(0, 1))
+                ],
               ),
             ),
           ),
@@ -135,6 +140,72 @@ class _SubadminList extends StatelessWidget {
     required this.error,
   }) : super(key: key);
 
+  // ---------- Helpers ----------
+  static String _getString(Map<String, dynamic> m, List<String> keys) {
+    for (final k in keys) {
+      final v = m[k];
+      if (v != null) {
+        final s = v.toString().trim();
+        if (s.isNotEmpty) return s;
+      }
+    }
+    return '';
+  }
+
+  /// Prefer firstname + lastname; else try common fallbacks; else derive from email.
+  static String _bestDisplayName(Map<String, dynamic> m) {
+    final first = _getString(m, ['firstname', 'first_name', 'firstName']);
+    final last = _getString(m, ['lastname', 'last_name', 'lastName']);
+    final fullFromPair =
+        [first, last].where((e) => e.isNotEmpty).join(' ').trim();
+    if (fullFromPair.isNotEmpty) return fullFromPair;
+
+    final single = _getString(m, [
+      'name',
+      'full_name',
+      'fullname',
+      'display_name',
+      'username',
+      'user_name',
+      'title'
+    ]);
+    if (single.isNotEmpty) return single;
+
+    final email = _getString(m, ['email']);
+    if (email.isNotEmpty && email.contains('@')) {
+      return email
+          .split('@')
+          .first
+          .replaceAll('.', ' ')
+          .replaceAll('_', ' ')
+          .trim();
+    }
+    return 'Subadmin';
+  }
+
+  /// Use as-is if already absolute; else prefix with Api.imageBaseUrl.
+  static String _imageUrlFrom(Map<String, dynamic> m) {
+    final raw =
+        _getString(m, ['image', 'avatar', 'profile_image', 'profileImage']);
+    if (raw.isEmpty) return '';
+    final lower = raw.toLowerCase();
+    // Avoid hitting known placeholder/invalid images that 404 on server
+    final String fileName = lower.split('/').isNotEmpty ? lower.split('/').last : lower;
+    const blockedFileNames = {
+      'user.png',
+      'avatar.png',
+      'default.png',
+    };
+    if (blockedFileNames.contains(fileName) ||
+        lower.contains('placeholder') ||
+        lower.endsWith('/user.png') ||
+        lower.endsWith('/avatar.png')) {
+      return '';
+    }
+    if (lower.startsWith('http://') || lower.startsWith('https://')) return raw;
+    return '${Api.imageBaseUrl}$raw';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -152,7 +223,8 @@ class _SubadminList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 100),
         child: Text(
           error!,
-          style: TextStyle(color: AppColors.colorRed, fontWeight: FontWeight.w600),
+          style:
+              TextStyle(color: AppColors.colorRed, fontWeight: FontWeight.w600),
         ),
       );
     }
@@ -175,10 +247,15 @@ class _SubadminList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final item = subadmins[index];
-        final fullName = '${item['firstname'] ?? ''} ${item['lastname'] ?? ''}'.trim();
-        final role = (item['rolename']?.toString() ?? 'subadmin').toUpperCase();
-        final type = (item['type']?.toString() ?? '');
-        final imageUrl = '${Api.imageBaseUrl}${item['image'] ?? ''}';
+
+        // Robust fields
+        final displayName = _bestDisplayName(item);
+        final email = _getString(item, ['email']);
+        final phone =
+            _getString(item, ['mobileno', 'mobile', 'phone', 'phone_number']);
+        final address =
+            _getString(item, ['address', 'location', 'societybuildingname']);
+        final imageUrl = _imageUrlFrom(item);
 
         return Container(
           decoration: BoxDecoration(
@@ -194,7 +271,11 @@ class _SubadminList extends StatelessWidget {
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(14),
-            onTap: () => _openDetailDialog(context, item),
+            onTap: () {
+              final int? subadminId = (item['subadminid'] as num?)?.toInt() ?? (item['id'] as num?)?.toInt();
+              debugPrint('Selected subadminId: $subadminId');
+              _openDetailDialog(context, item);
+            },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Row(
@@ -209,73 +290,67 @@ class _SubadminList extends StatelessWidget {
                       color: Colors.black.withOpacity(0.05),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Image.asset(AppImages.user, fit: BoxFit.cover),
-                    ),
+                    child: imageUrl.isEmpty
+                        ? Image.asset(AppImages.user, fit: BoxFit.cover)
+                        : Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                Image.asset(AppImages.user, fit: BoxFit.cover),
+                          ),
                   ),
                   12.0.pw,
 
-                  // Main info
+                  // Main info (ONLY: Name -> Email -> Phone -> Location)
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Name + role chip line
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                fullName.isEmpty ? 'Subadmin' : fullName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: AppColors.textBlack,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                            8.0.pw,
-                            _ChipSmall(text: role),
-                            if (type.isNotEmpty) ...[
-                              6.0.pw,
-                              _ChipSmall(text: type),
-                            ],
-                          ],
-                        ),
-                        6.0.ph,
-                        // Email + Phone (condensed)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _MutedText(
-                                text: item['email']?.toString() ?? '',
-                                icon: Icons.mail_outline_rounded,
-                              ),
-                            ),
-                            8.0.pw,
-                            Expanded(
-                              child: _MutedText(
-                                text: item['mobileno']?.toString() ?? '',
-                                icon: Icons.phone_iphone_rounded,
-                              ),
-                            ),
-                          ],
-                        ),
-                        6.0.ph,
-                        _MutedText(
-                          text: item['address']?.toString() ?? '',
-                          icon: Icons.location_on_outlined,
+                        // Name
+                        Text(
+                          displayName.isEmpty ? 'Subadmin' : displayName,
                           maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.textBlack,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
+                        6.0.ph,
+
+                        // Email
+                        if (email.isNotEmpty)
+                          _MutedText(
+                            text: email,
+                            icon: Icons.mail_outline_rounded,
+                          ),
+
+                        // Phone
+                        if (phone.isNotEmpty) ...[
+                          6.0.ph,
+                          _MutedText(
+                            text: phone,
+                            icon: Icons.phone_iphone_rounded,
+                          ),
+                        ],
+
+                        // Location
+                        if (address.isNotEmpty) ...[
+                          6.0.ph,
+                          _MutedText(
+                            text: address,
+                            icon: Icons.location_on_outlined,
+                            maxLines: 1,
+                          ),
+                        ],
                       ],
                     ),
                   ),
 
                   // Trailing chevron
-                  const Icon(Icons.chevron_right_rounded, color: Colors.black54),
+                  const Icon(Icons.chevron_right_rounded,
+                      color: Colors.black54),
                 ],
               ),
             ),
@@ -287,17 +362,19 @@ class _SubadminList extends StatelessWidget {
 
   void _openDetailDialog(BuildContext context, Map<String, dynamic> item) {
     final ctrl = Get.find<SubadminListController>();
-    final fullName = '${item['firstname'] ?? ''} ${item['lastname'] ?? ''}'.trim();
-    final imageUrl = '${Api.imageBaseUrl}${item['image'] ?? ''}';
+    final fullName = _bestDisplayName(item);
+    final imageUrl = _imageUrlFrom(item);
 
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (ctx) {
         return Dialog(
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           backgroundColor: AppColors.globalWhite,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Column(
@@ -324,12 +401,15 @@ class _SubadminList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              Image.asset(AppImages.user, fit: BoxFit.cover),
-                        ),
+                        child: imageUrl.isEmpty
+                            ? Image.asset(AppImages.user, fit: BoxFit.cover)
+                            : Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Image.asset(
+                                    AppImages.user,
+                                    fit: BoxFit.cover),
+                              ),
                       ),
                       12.0.pw,
                       Expanded(
@@ -353,15 +433,8 @@ class _SubadminList extends StatelessWidget {
                               ),
                             ),
                             6.0.ph,
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 6,
-                              children: [
-                                _ChipSmall(text: (item['rolename']?.toString() ?? 'SUBADMIN').toUpperCase(), inverted: true),
-                                if ((item['type']?.toString() ?? '').isNotEmpty)
-                                  _ChipSmall(text: item['type'].toString(), inverted: true),
-                              ],
-                            ),
+                            // Role/type chips intentionally removed from card,
+                            // dialog keeps broader details below.
                           ],
                         ),
                       ),
@@ -375,13 +448,31 @@ class _SubadminList extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _DetailRow(label: 'Email', value: item['email']?.toString() ?? ''),
-                      _DetailRow(label: 'Phone', value: item['mobileno']?.toString() ?? ''),
-                      _DetailRow(label: 'CNIC', value: item['cnic']?.toString() ?? ''),
-                      _DetailRow(label: 'Address', value: item['address']?.toString() ?? ''),
-                      _DetailRow(label: 'Building Name', value: item['societybuildingname']?.toString() ?? ''),
-                      _DetailRow(label: 'Created', value: item['created_at']?.toString() ?? ''),
-                      _DetailRow(label: 'Updated', value: item['updated_at']?.toString() ?? ''),
+                      _DetailRow(
+                          label: 'Email', value: _getString(item, ['email'])),
+                      _DetailRow(
+                          label: 'Phone',
+                          value: _getString(item,
+                              ['mobileno', 'mobile', 'phone', 'phone_number'])),
+                      _DetailRow(
+                          label: 'CNIC', value: _getString(item, ['cnic'])),
+                      _DetailRow(
+                          label: 'Address',
+                          value: _getString(item, ['address', 'location'])),
+                      _DetailRow(
+                          label: 'Building Name',
+                          value: _getString(item, ['societybuildingname'])),
+                      _DetailRow(
+                          label: 'Role',
+                          value: _getString(item, ['rolename']).toUpperCase()),
+                      _DetailRow(
+                          label: 'Type', value: _getString(item, ['type'])),
+                      _DetailRow(
+                          label: 'Created',
+                          value: _getString(item, ['created_at'])),
+                      _DetailRow(
+                          label: 'Updated',
+                          value: _getString(item, ['updated_at'])),
                       12.0.ph,
                     ],
                   ),
@@ -398,14 +489,19 @@ class _SubadminList extends StatelessWidget {
                         child: OutlinedButton(
                           onPressed: () {
                             Navigator.of(ctx).pop();
+                            final int? subadminId = (item['subadminid'] as num?)?.toInt() ?? (item['id'] as num?)?.toInt();
+                            debugPrint('Navigate (Update Manager) subadminId: $subadminId');
                             Get.toNamed(updateSubadmin, arguments: item);
                           },
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                            textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            textStyle: const TextStyle(
+                                fontSize: 12.5, fontWeight: FontWeight.w700),
                             side: BorderSide(color: AppColors.appThem),
                             foregroundColor: AppColors.appThem,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                           child: const Text('Update Manager'),
                         ),
@@ -413,8 +509,10 @@ class _SubadminList extends StatelessWidget {
                       10.0.pw,
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.of(ctx).pop();
+                            final int? subadminId = (item['subadminid'] as num?)?.toInt() ?? (item['id'] as num?)?.toInt();
+                            debugPrint('Navigate (Update Building) subadminId: $subadminId');
                             Get.toNamed(updateSubadminBuilding, arguments: {
                               'item': item,
                               'user': ctrl.user,
@@ -423,9 +521,12 @@ class _SubadminList extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.appThem,
                             foregroundColor: AppColors.globalWhite,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                            textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            textStyle: const TextStyle(
+                                fontSize: 12.5, fontWeight: FontWeight.w700),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                           child: const Text('Update Building'),
                         ),
@@ -443,34 +544,6 @@ class _SubadminList extends StatelessWidget {
 }
 
 /// --- Small components
-
-class _ChipSmall extends StatelessWidget {
-  final String text;
-  final bool inverted; // true for white text/outlined on gradient bg
-  const _ChipSmall({required this.text, this.inverted = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: inverted ? Colors.white.withOpacity(0.18) : Colors.black.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: inverted
-            ? Border.all(color: Colors.white.withOpacity(0.55), width: 1)
-            : null,
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 11.5,
-          fontWeight: FontWeight.w700,
-          color: inverted ? AppColors.globalWhite : AppColors.textBlack,
-        ),
-      ),
-    );
-  }
-}
 
 class _MutedText extends StatelessWidget {
   final String text;
@@ -500,7 +573,7 @@ class _MutedText extends StatelessWidget {
         Expanded(child: child),
       ],
     );
-    }
+  }
 }
 
 class _DetailRow extends StatelessWidget {
@@ -541,16 +614,4 @@ class _DetailRow extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget _labeled(String label, String value) {
-  // (Kept for compatibility if somewhere else uses it)
-  return Text.rich(
-    TextSpan(
-      children: [
-        TextSpan(text: label, style: const TextStyle(fontWeight: FontWeight.w700)),
-        TextSpan(text: value),
-      ],
-    ),
-  );
 }

@@ -93,12 +93,7 @@ class AddSocietyBuildingScreen extends GetView<AddSocietyBuildingController> {
                 },
                 nameController: controller.societyBuildingNameController,
                 buttonLoading: controller.isLoading,
-                // NEW ↓↓↓ pass dropdown data
-                subAdmins: controller.subAdmins,
-                isSubAdminsLoading: controller.isSubAdminsLoading,
-                selectedSubAdminId: controller.selectedSubAdminId,
-                onSelectSubAdmin: controller.onSelectSubAdmin,
-                // ↑↑↑
+                // Removed subadmin assignment dropdown per request
 
                 buttonOnPressed: () {
                   if (!controller.isLoading) {
@@ -113,14 +108,10 @@ class AddSocietyBuildingScreen extends GetView<AddSocietyBuildingController> {
                       type = 'phase society building';
                     }
 
-                    // Use selectedSubAdminId if chosen; otherwise keep previous behavior
-                    final subadminIdToSend = controller.selectedSubAdminId ??
-                        controller.user.userid!;
-
                     controller.addSocietyBuildingApi(
                       dynamicid: controller.user.societyid!,
                       societyid: controller.user.societyid!,
-                      subadminid: subadminIdToSend,
+                      // Remove subadmin assignment
                       superadminid: controller.user.superadminid!,
                       bearerToken: controller.user.bearerToken!,
                       BuildingName:

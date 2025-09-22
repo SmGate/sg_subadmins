@@ -74,9 +74,12 @@ class SocietyBuildingScreen extends GetView {
                       Expanded(
                           child: FutureBuilder(
                               future: controller.societyBuildingApi(
-                                  dynamicid: controller.user.structureType == 6
+                                  dynamicid: 
+                                  controller.user.structureType == 6
                                       ? controller.user.userid ?? 0
                                       : controller.user.societyid ?? 0,
+
+                                      
                                   token: controller.user.bearerToken!),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {

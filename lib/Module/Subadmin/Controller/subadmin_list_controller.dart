@@ -13,6 +13,7 @@ class SubadminListController extends GetxController {
   List<Map<String, dynamic>> subadmins = [];
   List<Map<String, dynamic>> buildings = [];
   int? selectedBuildingId;
+  bool isBuildingsLoading = false;
   final User? user;
 
   SubadminListController({this.user});
@@ -76,14 +77,21 @@ class SubadminListController extends GetxController {
 
   Future<void> fetchBuildings() async {
     if (user == null || user!.societyid == null) return;
+    await fetchBuildingsForSociety(user!.societyid!);
+  }
+
+  Future<void> fetchBuildingsForSociety(int societyId) async {
+    isBuildingsLoading = true;
+    buildings = [];
+    update();
     try {
-      final uri = Uri.parse('${Api.getBuildings}/${user!.societyid}');
+      final uri = Uri.parse('${Api.getBuildings}/$societyId');
       debugPrint('GET URL -> $uri');
       final response = await Http.get(
         uri,
         headers: <String, String>{
           'Accept': 'application/json',
-          if (user!.bearerToken != null) 'Authorization': 'Bearer ${user!.bearerToken}',
+          if (user?.bearerToken != null) 'Authorization': 'Bearer ${user!.bearerToken}',
         },
       );
       debugPrint('Status -> ${response.statusCode}');
@@ -92,16 +100,59 @@ class SubadminListController extends GetxController {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final List<dynamic> data = (body['data'] is List) ? body['data'] as List : <dynamic>[];
         buildings = data.map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e as Map)).toList();
-        update();
       }
     } catch (e) {
-      debugPrint('fetchBuildings error: $e');
+      debugPrint('fetchBuildingsForSociety error: $e');
+    } finally {
+      isBuildingsLoading = false;
+      update();
     }
   }
 
-  Future<void> assignBuildingToSubadmin({required int subadminId, required int buildingId}) async {
- 
-    Get.snackbar('Assigned', 'Building $buildingId assigned to subadmin $subadminId');
+  Future<String?> assignBuildingToSubadmin({required int subadminId, required int buildingId}) async {
+    try {
+      isSubmitting = true;
+      update();
+      final uri = Uri.parse(Api.assignBuilding);
+      final Map<String, dynamic> payload = <String, dynamic>{
+        'building_id': buildingId,
+        'subadminid': subadminId,
+      };
+
+      debugPrint('POST URL -> $uri');
+      debugPrint('Request Body -> ${jsonEncode(payload)}');
+
+      final response = await Http.post(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          if (user?.bearerToken != null) 'Authorization': 'Bearer ${user!.bearerToken}',
+        },
+        body: jsonEncode(payload),
+      );
+      debugPrint('Status -> ${response.statusCode}');
+      debugPrint('Response -> ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final String message = body['message']?.toString() ?? 'Building Assigned Successfully';
+        return message;
+      } else {
+        String message = '(${response.statusCode}) Failed to assign building';
+        try {
+          final Map<String, dynamic> err = jsonDecode(response.body);
+          if (err['message'] != null) message = err['message'].toString();
+        } catch (_) {}
+        Get.snackbar('Error', message);
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+    return null;
   }
 
   Future<void> addSubadmin({
@@ -123,6 +174,21 @@ class SubadminListController extends GetxController {
 
     try {
       final uri = Uri.parse(Api.addSubadmin);
+      final Map<String, dynamic> payload = <String, dynamic>{
+        'firstname': firstname,
+        'lastname': lastname,
+        'cnic': cnic,
+        'password': password,
+        'mobileno': mobileno,
+        'email': email,
+        'superadminid': user!.superadminid,
+        'societyid': user!.societyid,
+        'address': address,
+      };
+
+      debugPrint('POST URL -> $uri');
+      debugPrint('Request Body -> ${jsonEncode(payload)}');
+
       final response = await Http.post(
         uri,
         headers: <String, String>{
@@ -131,18 +197,11 @@ class SubadminListController extends GetxController {
           if (user!.bearerToken != null)
             'Authorization': 'Bearer ${user!.bearerToken}',
         },
-        body: jsonEncode(<String, dynamic>{
-          'firstname': firstname,
-          'lastname': lastname,
-          'cnic': cnic,
-          'password': password,
-          'mobileno': mobileno,
-          'email': email,
-          'superadminid': user!.superadminid,
-          'societyid': user!.societyid,
-          'address': address,
-        }),
+        body: jsonEncode(payload),
       );
+
+      debugPrint('Status -> ${response.statusCode}');
+      debugPrint('Response -> ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
@@ -150,15 +209,105 @@ class SubadminListController extends GetxController {
         await fetchSubadmins();
         Get.snackbar('Success', body['message']?.toString() ?? 'Subadmin added');
         return;
+      } else {
+        String message = '(${response.statusCode}) Failed to add subadmin';
+        try {
+          final Map<String, dynamic> err = jsonDecode(response.body);
+          if (err['message'] != null) {
+            message = err['message'].toString();
+          } else if (err['errors'] != null) {
+            final errors = err['errors'];
+            if (errors is Map) {
+              final parts = <String>[];
+              errors.forEach((k, v) {
+                if (v is List && v.isNotEmpty) {
+                  parts.add(v.first.toString());
+                } else if (v != null) {
+                  parts.add(v.toString());
+                }
+              });
+              if (parts.isNotEmpty) message = parts.join('\n');
+            } else {
+              message = errors.toString();
+            }
+          }
+        } catch (_) {}
+        Get.snackbar('Error', message);
       }
-
-      Get.snackbar('Error', '(${response.statusCode}) Failed to add subadmin');
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
       isSubmitting = false;
       update();
     }
+  }
+
+  Future<String?> updateSubadmin({
+    required int subadminId,
+    required String firstname,
+    required String lastname,
+    required String cnic,
+    required String password,
+    required String mobileno,
+    required String address,
+    String? email,
+  }) async {
+    if (user == null || user!.societyid == null || user!.superadminid == null) {
+      Get.snackbar('Error', 'Missing user identifiers');
+      return null;
+    }
+
+    isSubmitting = true;
+    update();
+
+    try {
+      final uri = Uri.parse(Api.updateSubadmin);
+      final request = Http.MultipartRequest('POST', uri);
+      request.headers['Accept'] = 'application/json';
+      if (user!.bearerToken != null) {
+        request.headers['Authorization'] = 'Bearer ${user!.bearerToken}';
+      }
+
+      request.fields['cnic'] = cnic;
+      request.fields['password'] = password;
+      request.fields['firstname'] = firstname;
+      request.fields['lastname'] = lastname;
+      request.fields['address'] = address;
+      request.fields['mobileno'] = mobileno;
+      request.fields['superadminid'] = user!.superadminid.toString();
+      request.fields['societyid'] = user!.societyid.toString();
+      request.fields['subadminid'] = subadminId.toString();
+      if (email != null && email.trim().isNotEmpty) {
+        request.fields['email'] = email.trim();
+      }
+
+      debugPrint('POST URL -> $uri');
+      debugPrint('Request (multipart fields) -> ${request.fields}');
+
+      final streamed = await request.send();
+      final response = await Http.Response.fromStream(streamed);
+      debugPrint('Status -> ${response.statusCode}');
+      debugPrint('Response -> ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final String message = body['message']?.toString() ?? 'Manager Updated Successfully';
+        return message;
+      } else {
+        String message = '(${response.statusCode}) Failed to update subadmin';
+        try {
+          final Map<String, dynamic> err = jsonDecode(response.body);
+          if (err['message'] != null) message = err['message'].toString();
+        } catch (_) {}
+        Get.snackbar('Error', message);
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+    return null;
   }
 }
 

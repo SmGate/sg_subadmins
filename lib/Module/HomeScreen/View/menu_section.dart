@@ -18,7 +18,6 @@ class MenuSection extends StatelessWidget {
 
     // List of all menu items with associated permissions
     final List<Map<String, dynamic>> allItems = [
-
       {
         'permission': (controller.user.isMainAdmin ?? 0) == 1,
         'widget': MenuItems(
@@ -180,7 +179,6 @@ class MenuSection extends StatelessWidget {
               Get.offNamed(assignedParking, arguments: controller.user),
         ),
       },
-      
       {
         'permission': permissions?['domestic_help'],
         'widget': MenuItems(

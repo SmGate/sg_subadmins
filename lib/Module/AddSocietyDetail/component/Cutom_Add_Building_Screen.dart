@@ -148,19 +148,6 @@ class AddBuildingCustomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Build index-based dropdown to show all items even if some IDs are null/duplicate.
-    final List<SubAdminData> list = subAdmins ?? const <SubAdminData>[];
-    int? selectedIndex;
-    if (selectedSubAdminId != null) {
-      for (int i = 0; i < list.length; i++) {
-        final int? sid = list[i].subadminid ?? list[i].id;
-        if (sid != null && sid == selectedSubAdminId) {
-          selectedIndex = i;
-          break;
-        }
-      }
-    }
-
     return Form(
       key: fKey,
       child: ListView(
@@ -223,81 +210,7 @@ class AddBuildingCustomScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // ✅ Show dropdown only if subAdmins list is passed
-                    if (subAdmins != null) ...[
-                      16.ph,
-                      Center(
-                        child: Container(
-                          color: const Color(0xFFF7F8FA),
-                          height: 35.h,
-                          width: 200.w,
-                          child: Center(
-                            child: Text(
-                              'Assign Subadmin',
-                              style: TextStyle(color: HexColor('#535353')),
-                            ),
-                          ),
-                        ),
-                      ),
-                      12.ph,
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: SizedBox(
-                          width: 200.w,
-                          child: isSubAdminsLoading
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                  color: AppColors.appThem,
-                                ))
-                              : DropdownButtonFormField<int>(
-                                  value: selectedIndex,
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.greyTransparent
-                                        .withOpacity(0.1),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12.w, vertical: 12.h),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                  hint: const Text('Assign Subadmin'),
-                                  items: List.generate(list.length, (index) {
-                                    final s = list[index];
-                                    final int? id = s.subadminid ?? s.id;
-                                    final String title = (s.name?.trim().isNotEmpty ==
-                                            true)
-                                        ? s.name!.trim()
-                                        : [s.firstname, s.lastname]
-                                            .where((x) =>
-                                                (x?.trim().isNotEmpty ?? false))
-                                            .join(' ')
-                                            .trim();
-                                    return DropdownMenuItem<int>(
-                                      value: index,
-                                      child: Text(
-                                        title.isEmpty
-                                            ? 'Unnamed (${id ?? '-'})'
-                                            : title,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    );
-                                  }),
-                                  onChanged: (idx) {
-                                    if (idx == null) {
-                                      onSelectSubAdmin?.call(null);
-                                      return;
-                                    }
-                                    final s = list[idx];
-                                    final int? id = s.subadminid ?? s.id;
-                                    onSelectSubAdmin?.call(id);
-                                  },
-                                ),
-                        ),
-                      ),
-                    ],
+                    // Subadmin assignment dropdown removed as per request
 
                     20.ph,
                     MyButton(
