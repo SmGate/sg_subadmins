@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:societyadminapp/Module/AddSocietyDetail/component/Custom_Grid.dart';
 import 'package:societyadminapp/Widgets/loading.dart';
+import 'package:societyadminapp/utils/Constants/session_controller.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/my_back_button.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
@@ -41,7 +42,13 @@ class SocietyBuildingApartmentScreen extends GetView {
                   body: Column(
                     children: [
                       MyBackButton(
-                        text: 'Apartments',
+                        text:
+                            SessionController().selectedFloorType == "Corporate"
+                                ? "Offices"
+                                : SessionController().selectedFloorType ==
+                                        "Commercial"
+                                    ? "Shops"
+                                    : 'Apartments',
                         onTap: () {
                           Get.offAndToNamed(societybuildingfloorsscreen,
                               arguments: [controller.user, controller.bid]);

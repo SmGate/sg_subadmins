@@ -40,11 +40,6 @@ String _statusParam(ComplaintStatus s) {
 }
 
 //================ ROBUST STATUS PARSING ==================
-// We’ll parse either a string (statusDescription) or a number (status).
-// Supported:
-// - Strings: "completed", "in progress", "pending" (case-insensitive)
-// - Int scheme A: 1=pending, 2=in progress, 3=completed
-// - Int scheme B: 0=pending, 1=in progress, 2=completed
 
 enum _ParsedStatus { pending, inProgress, completed, unknown }
 

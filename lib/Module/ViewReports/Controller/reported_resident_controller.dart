@@ -131,7 +131,7 @@ class ResidentsListController extends GetxController {
   }
 
   Uri _buildAllUri({required int subadminId}) {
-    // {{base_url}}/get-all-reports/{subadminId}?status=in progress
+   
     final base = '${Api.getAllReports}/$subadminId';
     final params = <String, String>{};
     if (selectedStatusText != null && selectedStatusText!.isNotEmpty) {

@@ -34,15 +34,28 @@ class AddSocietyBuildingApartmentsScreen extends GetView {
                 fromController: controller.fromController,
                 toController: controller.toController,
                 buttonLoading: controller.isLoading,
-                buttonOnPressed: () {
-                  if (!controller.isLoading) {
-                    controller.addApartmentsApi(
-                      bearerToken: controller.user.bearerToken!,
-                      from: controller.fromController.text.toString(),
-                      to: controller.toController.text.toString(),
-                      fid: controller.fid!,
-                    );
-                  }
+                floorCategory: (controller.argumnet is List &&
+                        controller.argumnet.length > 3)
+                    ? controller.argumnet[3]?.toString()
+                    : null,
+                onSubmit: (
+                    {String? name,
+                    required String from,
+                    required String to,
+                    required int typeId,
+                    required String type}) {
+                  if (controller.isLoading) return;
+                  debugPrint(
+                      'Submit Apartments -> typeId: $typeId, type: $type, name: $name, from:$from to:$to');
+                  controller.addApartmentsApi(
+                    bearerToken: controller.user.bearerToken!,
+                    from: from,
+                    to: to,
+                    fid: controller.fid!,
+                    name: name,
+                    typeId: typeId,
+                    type: type,
+                  );
                 },
               ));
         });

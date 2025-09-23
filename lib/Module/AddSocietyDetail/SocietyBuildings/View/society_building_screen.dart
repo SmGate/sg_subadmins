@@ -11,6 +11,7 @@ import 'package:societyadminapp/utils/style/colors/app_colors.dart';
 import '../../../../Routes/set_routes.dart';
 import '../../../../Widgets/My_Floating_Button.dart';
 import '../Controller/society_building_controller.dart';
+import '../../../../utils/Constants/session_controller.dart';
 
 class SocietyBuildingScreen extends GetView {
   @override
@@ -41,10 +42,12 @@ class SocietyBuildingScreen extends GetView {
             child: SafeArea(
               child: Scaffold(
                   backgroundColor: AppColors.background,
-                  floatingActionButton:controller.user.isMainAdmin == 1 ? MyFloatingButton(onPressed: () {
-                    Get.offAndToNamed(addsocietybuildingscreen,
-                        arguments: controller.user);
-                  }):SizedBox(),
+                  floatingActionButton: controller.user.isMainAdmin == 1
+                      ? MyFloatingButton(onPressed: () {
+                          Get.offAndToNamed(addsocietybuildingscreen,
+                              arguments: controller.user);
+                        })
+                      : SizedBox(),
                   body: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -68,18 +71,15 @@ class SocietyBuildingScreen extends GetView {
                                 arguments: controller.user);
                           }
                         },
-                        text: 'Buildings',
+                        text: 'Building',
                       ),
                       32.ph,
                       Expanded(
                           child: FutureBuilder(
                               future: controller.societyBuildingApi(
-                                  dynamicid: 
-                                  controller.user.structureType == 6
+                                  dynamicid: controller.user.structureType == 6
                                       ? controller.user.userid ?? 0
                                       : controller.user.societyid ?? 0,
-
-                                      
                                   token: controller.user.bearerToken!),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {
@@ -97,6 +97,15 @@ class SocietyBuildingScreen extends GetView {
                                         (BuildContext context, int index) {
                                       return CustomGrid(
                                         onTap: () async {
+                                          final int? bid =
+                                              snapshot.data.data[index].id;
+                                          if (bid != null) {
+                                            SessionController()
+                                                    .selectedBuildingId =
+                                                bid.toString();
+                                            debugPrint(
+                                                'Selected building saved in session: $bid');
+                                          }
                                           Get.offAndToNamed(
                                               societybuildingfloorsscreen,
                                               arguments: [

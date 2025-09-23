@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:societyadminapp/Routes/set_routes.dart';
+import 'package:societyadminapp/utils/Constants/session_controller.dart';
 
 import '../../../../utils/Constants/api_routes.dart';
 import '../../../../Model/User.dart';
@@ -22,8 +23,6 @@ class AddSocietyBuildingApartmentsController extends GetxController {
 
   @override
   void onInit() {
-  
-
     super.onInit();
 
     user = argumnet[0];
@@ -36,6 +35,9 @@ class AddSocietyBuildingApartmentsController extends GetxController {
     required int fid,
     required String from,
     required String to,
+    String? name,
+    int? typeId,
+    String? type,
   }) async {
     isLoading = true;
     update();
@@ -44,8 +46,15 @@ class AddSocietyBuildingApartmentsController extends GetxController {
     var request = Http.MultipartRequest(
         'POST', Uri.parse(Api.addSocietyBuildingApartments));
     request.headers.addAll(headers);
-    request.fields['from'] = from;
-    request.fields['to'] = to;
+    if (name != null && name.trim().isNotEmpty) {
+      request.fields['name'] = name.trim();
+    } else {
+      request.fields['from'] = from;
+      request.fields['to'] = to;
+    }
+    if (typeId != null) request.fields['typeid'] = typeId.toString();
+    if (type != null && type.trim().isNotEmpty)
+      request.fields['type'] = type.trim();
     request.fields['societybuildingfloorid'] = fid.toString();
 
     var responsed = await request.send();
@@ -54,7 +63,13 @@ class AddSocietyBuildingApartmentsController extends GetxController {
     print(response.body);
 
     if (response.statusCode == 200) {
-      Get.snackbar("Apartments Add Successfully", "");
+      final String t = SessionController().selectedFloorType;
+      final String successMsg = t == 'Corporate'
+          ? 'Offices added successfully'
+          : t == 'Commercial'
+              ? 'Shops added successfully'
+              : 'Apartments added successfully';
+      Get.snackbar(successMsg, "");
       Get.offAndToNamed(societybuildingapartmentscreen,
           arguments: [user, fid, bid]);
 

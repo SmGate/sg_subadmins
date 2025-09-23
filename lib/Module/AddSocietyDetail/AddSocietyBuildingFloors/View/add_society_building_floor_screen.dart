@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../Routes/set_routes.dart';
 import '../../component/Cutom_Add_Building_Floor_Screen.dart';
 import '../Controller/add_society_building_floor_controller.dart';
+import '../../../../utils/Constants/session_controller.dart';
 
 class AddSocietyBuildingFloors extends GetView {
   @override
@@ -46,16 +47,20 @@ class AddSocietyBuildingFloors extends GetView {
                 // Loading state for building dropdown
                 loadingBuildings: controller.loadingBuildings,
                 buttonOnPressed: () {
-                  // if (!controller.isLoading) {
-                  //   controller.addSocietybuildingFloorsApi(
-                  //       bearerToken: controller.user.bearerToken!,
-                  //       from: controller.fromController.text.toString(),
-                  //       to: controller.toController.text.toString(),
-                  //       buildingid: controller.buildingid!);
-                  // }
-
+                  final String selectedType =
+                      controller.selectedFloorType.value;
+                  if (selectedType.isEmpty || selectedType == 'Floor Type') {
+                    Get.snackbar(
+                        'Validation', 'Select floor type from dropdown');
+                    return;
+                  }
+                  final String bid = SessionController().selectedBuildingId;
+                  if (bid.isEmpty) {
+                    Get.snackbar('Validation', 'No building selected');
+                    return;
+                  }
                   controller.addFloors(
-                    buildingId: controller.selectedBuildingId.value.toString(),
+                    buildingId: bid,
                     name: controller.customFloorsController.text,
                     category: controller.selectedFloorType.value,
                     from: controller.fromController.text.toString(),

@@ -155,4 +155,17 @@ class MySharedPreferences {
   //
   //   return societyModel;
   // }
+
+  // Selected Building helpers
+  static const String _selectedBuildingIdKey = 'selected_building_id';
+
+  static Future<void> setSelectedBuildingId(int buildingId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_selectedBuildingIdKey, buildingId);
+  }
+
+  static Future<int?> getSelectedBuildingId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_selectedBuildingIdKey);
+  }
 }

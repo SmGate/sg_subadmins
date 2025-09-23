@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:societyadminapp/Widgets/app_gradient.dart';
 import 'package:societyadminapp/Widgets/loading.dart';
+import 'package:societyadminapp/utils/Constants/session_controller.dart';
 import 'package:societyadminapp/utils/Extensions/extensions.dart';
 import 'package:societyadminapp/Widgets/my_back_button.dart';
 import 'package:societyadminapp/utils/style/colors/app_colors.dart';
@@ -108,12 +109,15 @@ class SocietyBuildingFloorsScreen extends GetView {
                                   final floor = snapshot.data.data[index];
                                   return CustomList(
                                     onTap: () {
+                                      SessionController().selectedFloorType =
+                                          floor.category ?? "";
                                       Get.offAndToNamed(
                                           societybuildingapartmentscreen,
                                           arguments: [
                                             controller.user,
                                             floor.id,
-                                            controller.buildingid
+                                            controller.buildingid,
+                                            floor.category,
                                           ]);
                                     },
                                     text: floor.name ?? "",

@@ -30,6 +30,8 @@ class AddLocalBuildingApartmentsScreen extends GetView {
                 toController: controller.toController,
                 buttonLoading: controller.isLoading,
                 buttonOnPressed: () {
+                  debugPrint(
+                      "Bearer ${controller.user.bearerToken!} FID : ${controller.fid}");
                   if (!controller.isLoading) {
                     controller.addApartmentsApi(
                       bearerToken: controller.user.bearerToken!,

@@ -19,4 +19,8 @@ class SessionController {
   User user = User();
 
   Data? measurementModel;
+
+  // SAVE SELECTED BUILDING ID
+  String selectedBuildingId = "";
+  String selectedFloorType = "";
 }

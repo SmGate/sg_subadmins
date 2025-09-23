@@ -174,7 +174,7 @@ class AddMeasurements extends GetView {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SpanText(
-                                            text: 'Floors',
+                                            text: 'Floor',
                                             hasValidator: false,
                                           ),
                                           SizedBox(
